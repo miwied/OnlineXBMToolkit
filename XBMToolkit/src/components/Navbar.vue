@@ -1,36 +1,30 @@
 <template>
     <nav>
-        <router-link class="logo" to="/">
-            <img class="miwied-logo" src="../assets/miwied_logo.svg" alt="miwied logo" />
-        </router-link>
+        <img class="miwied-logo" src="../assets/miwied_logo.svg" alt="miwied logo" />
+        <div class="nav-text">XBMToolkit</div>
     </nav>
 </template>
 
 <style scoped>
 nav {
     height: 2.7rem;
-    padding: 0.1rem 0.5rem 0.1rem;
-    overflow: hidden;
+    padding: 0.1rem 0.25rem 0.1rem;
     display: flex;
+    justify-content: start;
     align-items: center;
-    justify-content: space-between;
     background-color: #2B2B2B;
 }
 
-.logo {
+.miwied-logo {
+    width: auto;
     height: 90%;
-    height: 90%;
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    position: relative;
-    pointer-events: auto;
-    margin-right: 0.25rem;
+    pointer-events: none;
 }
 
-.miwied-logo {
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+.nav-text {
+    font-size: 150%;
+    margin-left: 0.45rem;
+    color: #FFFFFF;
+    font-family: 'VT323', monospace;
 }
 </style>
