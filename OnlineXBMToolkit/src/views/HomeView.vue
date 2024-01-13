@@ -31,6 +31,11 @@
             <v-file-input ref="fileInput" class="file-input" v-model="originalImage" label="Upload and convert a image"
                 @change="handleFileChange" accept=".svg, .png, .jpg, .jpeg" filled clearable></v-file-input>
             <v-btn @click="handleUpload" prepend-icon="mdi-publish"> Upload file </v-btn>
+            <div class="size-inputs">
+                <v-btn @click="scaleImageDown" icon="mdi-minus"></v-btn>
+                <v-text-field placeholder="Size" v-model="imageSize" center-affix></v-text-field>
+                <v-btn @click="scaleImageUp" icon="mdi-plus"></v-btn>
+            </div>
             <v-btn @click="reset" prepend-icon="mdi-delete"> Reset </v-btn>
             <v-btn @click="invert" prepend-icon="mdi-invert-colors"> Invert </v-btn>
         </div>
@@ -51,11 +56,9 @@ export default {
     data() {
         return {
             xbmArray:
-                [
-
-                ],
+                [],
             originalImage: '',
-            gridSize: 30,
+            gridSize: 24,
             imageSize: 24,
         };
     },
@@ -92,6 +95,7 @@ export default {
             this.$refs.xbmEditor.clearAll();
             this.$refs.fileInput.value = null;
             this.imageSize = 24;
+            this.gridSize = 24;
         },
         invert() {
             this.$refs.xbmEditor.invert();
@@ -166,9 +170,5 @@ export default {
 .settings-container>* {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-}
-
-.settings-container button {
-    width: 100%;
 }
 </style>

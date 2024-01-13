@@ -44,7 +44,6 @@ export default {
     },
     mounted() {
         this.decode();
-
     },
     methods: {
         decode() {

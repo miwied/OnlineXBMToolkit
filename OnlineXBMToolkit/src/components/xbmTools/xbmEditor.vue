@@ -31,7 +31,13 @@ export default {
             if (JSON.stringify(this.xbmArray) !== JSON.stringify(this.newVal)) {
                 this.handleXbmArrayChange();
             }
-        }
+        },
+        gridWidth: function (newVal, oldVal) {
+            this.decode();
+        },
+        gridHeight: function (newVal, oldVal) {
+            this.decode();
+        },
     },
     data() {
         return {
