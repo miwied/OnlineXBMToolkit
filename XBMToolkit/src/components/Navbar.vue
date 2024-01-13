@@ -1,7 +1,7 @@
 <template>
     <nav>
         <img class="miwied-logo" src="../assets/miwied_logo.svg" alt="miwied logo" />
-        <div class="nav-text">XBMToolkit</div>
+        <div class="nav-text">OnlineXBMToolkit</div>
     </nav>
 </template>
 
