@@ -1,15 +1,29 @@
 <template>
     <div class="xbm-tool-container">
+        <div class="viewer-editor-container">
+            <xbmViewer ref="xbmViewer" class="icon-container upper-icon" :xbmArray="xbmArray" :gridWidth="gridWidth"
+                :gridHeight="gridHeight" />
+            <div>
 
-        <v-file-input class="file-input" label="Upload and convert a image" ref="fileInput" @change="handleFileChange"
-            @clear="test" accept=".svg, .png, .jpg, .jpeg" filled></v-file-input>
-        <v-btn @click="reset" class="input"> Reset </v-btn>
-        <!-- <v-btn @click="reset" class="input"> Invert </v-btn> -->
+            </div>
+            <div class="editor-container">
+                <div class="editor-horizontal-button-container">
+                    <v-btn class="horizontal-button">test</v-btn>
+                    <xbmEditor ref="xbmEditor" class="icon-container" :xbmArray="xbmArray" :gridWidth="gridWidth"
+                        :gridHeight="gridHeight" @update-array="updateArray" />
+                    <v-btn class="horizontal-button">test</v-btn>
+                </div>
+            </div>
 
-        <xbmViewer ref="xbmViewer" class="icon-container upper-icon" :xbmArray="xbmArray" :gridWidth="gridWidth"
-            :gridHeight="gridHeight" />
-        <xbmEditor ref="xbmEditor" class="icon-container" :xbmArray="xbmArray" :gridWidth="gridWidth"
-            :gridHeight="gridHeight" @update-array="updateArray" />
+            <xbmConverter ref="xbmConverter" :image="originalImage" :gridWidth="gridWidth" :gridHeight="gridHeight"
+                :imageWidth="imageWidth" :imageHeight="imageHeight" @xbm-array-converted="onConvertedXbmArray" />
+        </div>
+        <div class="settings-container">
+            <v-file-input ref="fileInput" class="file-input" v-model="originalImage" label="Upload and convert a image"
+                @change="handleFileChange" accept=".svg, .png, .jpg, .jpeg" filled clearable></v-file-input>
+            <v-btn @click="handleUpload" prepend-icon="mdi-publish"> Upload file </v-btn>
+            <v-btn @click="reset" prepend-icon="mdi-delete"> Reset </v-btn>
+        </div>
 
         <!-- <button @click="reset" class="input">reset</button>
         <button @click="invert" class="input">invert</button>
@@ -26,9 +40,6 @@
         <label class="input" for="imgHeight">Image Height</label>
         <input class="input" type="number" id="imgHeight" v-model="imageHeight"> -->
     </div>
-
-    <xbmConverter ref="xbmConverter" :image="originalImage" :gridWidth="gridWidth" :gridHeight="gridHeight"
-        :imageWidth="imageWidth" :imageHeight="imageHeight" @xbm-array-converted="onConvertedXbmArray" />
 </template>
   
 <script>
@@ -85,6 +96,9 @@ export default {
                 reader.readAsDataURL(file);
             }
         },
+        handleUpload() {
+            this.$refs.fileInput.click();
+        },
         onConvertedXbmArray(array) {
             this.xbmArray = array;
         },
@@ -138,17 +152,29 @@ export default {
     flex-direction: row;
 }
 
-.file-input {
+.viewer-editor-container {
+    width: 20%;
+}
+
+.editor-container {}
+
+.editor-horizontal-button-container button {
+    width: 100%;
+    background-color: red;
+}
+
+.settings-container {
     width: 30%;
-    margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-.upper-icon {
-    margin-bottom: 20px;
+.settings-container>* {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
-.icon-container {
-    width: 23%;
+.settings-container button {
+    width: 100%;
 }
 </style>
