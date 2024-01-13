@@ -41,9 +41,7 @@ export default {
         };
     },
     mounted() {
-        if (Array.isArray(this.xbmArray) && this.xbmArray.length > 0) {
-            this.decode();
-        }
+        this.decode();
     },
     methods: {
         decode() {

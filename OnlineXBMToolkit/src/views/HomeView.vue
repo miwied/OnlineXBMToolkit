@@ -1,44 +1,39 @@
 <template>
     <div class="xbm-tool-container">
         <div class="viewer-editor-container">
-            <xbmViewer ref="xbmViewer" class="icon-container upper-icon" :xbmArray="xbmArray" :gridWidth="gridWidth"
-                :gridHeight="gridHeight" />
-            <div>
+            <xbmViewer ref="xbmViewer" class="icon-container upper-icon" :xbmArray="xbmArray" :gridWidth="gridSize"
+                :gridHeight="gridSize" />
 
-            </div>
-            <div class="editor-container">
-                <div class="editor-horizontal-button-container">
-                    <v-btn class="horizontal-button">test</v-btn>
-                    <xbmEditor ref="xbmEditor" class="icon-container" :xbmArray="xbmArray" :gridWidth="gridWidth"
-                        :gridHeight="gridHeight" @update-array="updateArray" />
-                    <v-btn class="horizontal-button">test</v-btn>
-                </div>
+            <xbmEditor ref="xbmEditor" class="icon-container" :xbmArray="xbmArray" :gridWidth="gridSize"
+                :gridHeight="gridSize" @update-array="updateArray" />
+
+            <div class="size-inputs">
+                <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
+                <v-text-field placeholder="Size" v-model="gridSize" center-affix></v-text-field>
+                <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
             </div>
 
-            <xbmConverter ref="xbmConverter" :image="originalImage" :gridWidth="gridWidth" :gridHeight="gridHeight"
-                :imageWidth="imageWidth" :imageHeight="imageHeight" @xbm-array-converted="onConvertedXbmArray" />
+            <div class="editor-buttons">
+                <v-btn @click="shiftLeft" icon="mdi-chevron-left"></v-btn>
+                <v-btn @click="shiftRight" icon="mdi-chevron-right"></v-btn>
+                <v-btn @click="shiftUp" icon="mdi-chevron-up"></v-btn>
+                <v-btn @click="shiftDown" icon="mdi-chevron-down"></v-btn>
+            </div>
+            <div class="editor-buttons">
+                <v-btn @click="rotateLeft" icon="mdi-rotate-left"></v-btn>
+                <v-btn @click="rotateRight" icon="mdi-rotate-right"></v-btn>
+            </div>
+
+            <xbmConverter ref="xbmConverter" :image="originalImage" :gridWidth="gridSize" :gridHeight="gridSize"
+                :imageWidth="imageSize" :imageHeight="imageSize" @xbm-array-converted="onConvertedXbmArray" />
         </div>
         <div class="settings-container">
             <v-file-input ref="fileInput" class="file-input" v-model="originalImage" label="Upload and convert a image"
                 @change="handleFileChange" accept=".svg, .png, .jpg, .jpeg" filled clearable></v-file-input>
             <v-btn @click="handleUpload" prepend-icon="mdi-publish"> Upload file </v-btn>
             <v-btn @click="reset" prepend-icon="mdi-delete"> Reset </v-btn>
+            <v-btn @click="invert" prepend-icon="mdi-invert-colors"> Invert </v-btn>
         </div>
-
-        <!-- <button @click="reset" class="input">reset</button>
-        <button @click="invert" class="input">invert</button>
-        <button @click="shiftLeft" class="input">shift left</button>
-        <button @click="shiftRight" class="input">shift right</button>
-        <button @click="shiftUp" class="input">shift up</button>
-        <button @click="shiftDown" class="input">shift down</button>
-        <button @click="rotateLeft" class="input">rotate left</button>
-        <button @click="rotateRight" class="input">rotate right</button>
-        <button @click="scaleUp" class="input">scale up</button>
-        <button @click="scaleDown" class="input">scale down</button>
-        <label class="input" for="imgWidth">Image Width</label>
-        <input class="input" type="number" id="imgWidth" v-model="imageWidth">
-        <label class="input" for="imgHeight">Image Height</label>
-        <input class="input" type="number" id="imgHeight" v-model="imageHeight"> -->
     </div>
 </template>
   
@@ -57,22 +52,11 @@ export default {
         return {
             xbmArray:
                 [
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+
                 ],
             originalImage: '',
-            gridWidth: 30,
-            gridHeight: 30,
-            imageWidth: 24,
-            imageHeight: 24,
+            gridSize: 30,
+            imageSize: 24,
         };
     },
     methods: {
@@ -107,8 +91,7 @@ export default {
             this.originalImage = '';
             this.$refs.xbmEditor.clearAll();
             this.$refs.fileInput.value = null;
-            this.imageHeight = 24;
-            this.imageWidth = 24;
+            this.imageSize = 24;
         },
         invert() {
             this.$refs.xbmEditor.invert();
@@ -131,14 +114,18 @@ export default {
         rotateRight() {
             this.$refs.xbmEditor.rotateRight()();
         },
-        scaleUp() {
-            this.imageWidth = this.imageWidth + 1;
-            this.imageHeight = this.imageHeight + 1;
+        scaleGridUp() {
+            this.gridSize = this.gridSize + 1;
+        },
+        scaleGridDown() {
+            this.gridSize = this.gridSize - 1;
+        },
+        scaleImageUp() {
+            this.imageSize = this.imageSize + 1;
             this.$refs.xbmConverter.convertToXbm();
         },
-        scaleDown() {
-            this.imageWidth = this.imageWidth - 1;
-            this.imageHeight = this.imageHeight - 1;
+        scaleImageDown() {
+            this.imageSize = this.imageSize - 1;
             this.$refs.xbmConverter.convertToXbm();
         },
     }
@@ -152,15 +139,22 @@ export default {
     flex-direction: row;
 }
 
-.viewer-editor-container {
-    width: 20%;
+.size-inputs {
+    display: flex;
+    justify-content: center;
 }
 
-.editor-container {}
+.editor-buttons {
+    display: flex;
+}
 
-.editor-horizontal-button-container button {
-    width: 100%;
-    background-color: red;
+.editor-buttons>* {
+    margin: 0.5rem;
+}
+
+.editor-buttons {
+    display: flex;
+    justify-content: center;
 }
 
 .settings-container {
