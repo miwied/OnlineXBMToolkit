@@ -27,6 +27,7 @@ export default {
     watch: {
         xbmArray: function (newVal, oldVal) {
             if (JSON.stringify(this.xbmArray) !== JSON.stringify(this.newVal)) {
+                console.log("test");
                 this.handleXbmArrayChange();
             }
         },

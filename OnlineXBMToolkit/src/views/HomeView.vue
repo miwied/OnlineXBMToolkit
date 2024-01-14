@@ -1,9 +1,9 @@
 <template>
     <div class="xbm-tool-container">
         <v-card prepend-icon="mdi-publish" title="Input" class="card-container" variant="tonal">
-            <v-file-input ref="fileInput" style="display: none;" v-model="originalImage" @change="handleFileChange"
-                accept=".svg, .png, .jpg, .jpeg"></v-file-input>
-            <v-btn @click="handleUpload" prepend-icon="mdi-publish">Upload and convert image</v-btn>
+            <v-file-input ref="fileInput" style="display: none;" label="Upload and convert a image"
+                @change="handleFileChange" accept=".svg, .png, .jpg, .jpeg" filled clearable></v-file-input>
+            <v-btn @click="handleUpload" prepend-icon="mdi-publish"> Upload file </v-btn>
             <v-btn @click="reset" prepend-icon="mdi-delete"> Reset </v-btn>
             <v-btn @click="invert" prepend-icon="mdi-invert-colors"> Invert </v-btn>
             <div class="size-inputs">
@@ -38,9 +38,6 @@
                     <v-btn @click="rotateLeft" icon="mdi-rotate-left"></v-btn>
                     <v-btn @click="rotateRight" icon="mdi-rotate-right"></v-btn>
                 </div>
-
-                <xbmConverter ref="xbmConverter" :image="originalImage" :gridWidth="gridWidth" :gridHeight="gridHeight"
-                    :imageWidth="imageWidth" :imageHeight="imageHeight" @xbm-array-converted="onConvertedXbmArray" />
             </v-card>
         </div>
         <v-divider :thickness="6" vertical></v-divider>
@@ -60,6 +57,8 @@
             </v-container>
         </v-card>
     </div>
+    <xbmConverter ref="xbmConverter" :image="originalImage" :gridWidth="gridWidth" :gridHeight="gridHeight"
+        :imageWidth="imageWidth" :imageHeight="imageHeight" @xbm-array-converted="onConvertedXbmArray" />
 </template>
   
 <script>
@@ -75,8 +74,7 @@ export default {
     },
     data() {
         return {
-            xbmArray:
-                [],
+            xbmArray: [],
             originalImage: '',
             gridHeight: 24,
             gridWidth: 24,
@@ -96,7 +94,6 @@ export default {
                 reader.onload = (e) => {
                     this.originalImage = e.target.result;
                     const img = new Image();
-                    console.log("test");
                     img.onload = () => {
                         this.$refs.xbmConverter.convertToXbm();
                     };
@@ -117,8 +114,10 @@ export default {
             this.originalImage = '';
             this.$refs.xbmEditor.clearAll();
             this.$refs.fileInput.value = null;
-            this.imageSize = 24;
-            this.gridSize = 24;
+            this.imageHeight = 24;
+            this.imageWidth = 24;
+            this.gridHeight = 24;
+            this.gridWidth = 24;
         },
         invert() {
             this.$refs.xbmEditor.invert();
@@ -158,7 +157,6 @@ export default {
         scaleImageUp() {
             this.imageWidth++;
             this.imageHeight++;
-            this.imageSize = this.imageSize + 1;
             if (this.originalImage !== null && this.originalImage !== undefined) {
                 this.$refs.xbmConverter.convertToXbm();
             }
@@ -182,7 +180,7 @@ export default {
 }
 
 .xbm-tool {
-    width: 400px;
+    width: 50%;
 }
 
 .size-inputs {
