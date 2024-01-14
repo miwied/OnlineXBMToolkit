@@ -28,26 +28,6 @@
 
         <v-divider :thickness="6" vertical></v-divider>
 
-        <v-card prepend-icon="mdi-pencil" title="Edit" class="card-container" variant="tonal">
-            <xbmEditor ref="xbmEditor" class="xbm-tool" :xbmArray="xbmArray" :gridWidth="gridWidth" :gridHeight="gridHeight"
-                @update-array="updateArray" />
-            <div class="editor-buttons">
-                <v-btn @click="rotateLeft" icon="mdi-rotate-left"></v-btn>
-                <v-btn @click="shiftLeft" icon="mdi-chevron-left"></v-btn>
-                <v-btn @click="shiftRight" icon="mdi-chevron-right"></v-btn>
-                <v-btn @click="shiftUp" icon="mdi-chevron-up"></v-btn>
-                <v-btn @click="shiftDown" icon="mdi-chevron-down"></v-btn>
-                <v-btn @click="rotateRight" icon="mdi-rotate-right"></v-btn>
-            </div>
-            <div class="editor-buttons">
-                <v-btn @click="invert" prepend-icon="mdi-invert-colors"> Invert </v-btn>
-            </div>
-        </v-card>
-        <xbmConverter ref="xbmConverter" :image="originalImage" :gridWidth="gridWidth" :gridHeight="gridHeight"
-            :imageWidth="imageWidth" :imageHeight="imageHeight" @xbm-array-converted="onConvertedXbmArray" />
-
-        <v-divider :thickness="6" vertical></v-divider>
-
         <v-card prepend-icon="mdi-download" title="Output" class="card-container" variant="tonal">
             <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
             <v-container>
@@ -63,8 +43,28 @@
                 </v-row>
             </v-container>
         </v-card>
-
     </div>
+
+    <v-divider :thickness="6"></v-divider>
+
+    <v-card prepend-icon="mdi-pencil" title="Edit" class="card-container" variant="tonal">
+        <xbmEditor ref="xbmEditor" class="xbm-tool" :xbmArray="xbmArray" :gridWidth="gridWidth" :gridHeight="gridHeight"
+            @update-array="updateArray" />
+        <div class="editor-buttons">
+            <v-btn @click="rotateLeft" icon="mdi-rotate-left"></v-btn>
+            <v-btn @click="shiftLeft" icon="mdi-chevron-left"></v-btn>
+            <v-btn @click="shiftRight" icon="mdi-chevron-right"></v-btn>
+            <v-btn @click="shiftUp" icon="mdi-chevron-up"></v-btn>
+            <v-btn @click="shiftDown" icon="mdi-chevron-down"></v-btn>
+            <v-btn @click="rotateRight" icon="mdi-rotate-right"></v-btn>
+        </div>
+        <div class="editor-buttons">
+            <v-btn @click="invert" prepend-icon="mdi-invert-colors"> Invert </v-btn>
+        </div>
+    </v-card>
+
+    <xbmConverter ref="xbmConverter" :image="originalImage" :gridWidth="gridWidth" :gridHeight="gridHeight"
+        :imageWidth="imageWidth" :imageHeight="imageHeight" @xbm-array-converted="onConvertedXbmArray" />
 </template>
   
 <script>
@@ -183,7 +183,6 @@ export default {
 <style scoped>
 .xbm-tool-container {
     display: flex;
-    align-items: start;
     flex-direction: row;
 }
 
