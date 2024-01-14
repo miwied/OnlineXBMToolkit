@@ -80,8 +80,7 @@ export default {
                 const cols = this.imageHeight;
                 const imageData = this.getImageData(img, rows, cols);
                 let xbmArray = this.encode(imageData, rows, cols);
-                // xbmArray = this.getResizedXbmArray(xbmArray);
-                console.log(xbmArray);
+                xbmArray = this.getResizedXbmArray(xbmArray);
                 this.$emit('xbm-array-converted', xbmArray);
             };
 
