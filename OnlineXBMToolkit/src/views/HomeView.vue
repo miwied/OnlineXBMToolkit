@@ -1,7 +1,7 @@
 <template>
     <div class="xbm-tool-container">
         <v-card prepend-icon="mdi-publish" title="Input" class="card-container" variant="tonal">
-            <v-file-input ref="fileInput" style="opacity : 0;" v-model="originalImage" @change="handleFileChange"
+            <v-file-input ref="fileInput" style="display: none;" v-model="originalImage" @change="handleFileChange"
                 accept=".svg, .png, .jpg, .jpeg"></v-file-input>
             <v-btn @click="handleUpload" prepend-icon="mdi-publish">Upload and convert image</v-btn>
             <v-btn @click="reset" prepend-icon="mdi-delete"> Reset </v-btn>
@@ -21,11 +21,11 @@
         </v-card>
         <v-divider :thickness="6" vertical></v-divider>
         <div class="card-container">
-            <xbmViewer ref="xbmViewer" class="xbm-tool" :xbmArray="xbmArray" :gridWidth="gridWidth"
-                :gridHeight="gridHeight" />
-            <v-card prepend-icon="mdi-eye" title="Preview" class="card-container">
+            <v-card prepend-icon="mdi-eye" title="Preview">
+                <xbmViewer ref="xbmViewer" class="xbm-tool" :xbmArray="xbmArray" :gridWidth="gridWidth"
+                    :gridHeight="gridHeight" />
             </v-card>
-            <v-card prepend-icon="mdi-pencil" title="Edit" class="card-container">
+            <v-card prepend-icon="mdi-pencil" title="Edit">
                 <xbmEditor ref="xbmEditor" class="xbm-tool" :xbmArray="xbmArray" :gridWidth="gridWidth"
                     :gridHeight="gridHeight" @update-array="updateArray" />
                 <div class="editor-buttons">
