@@ -51,8 +51,8 @@ export default {
     },
     methods: {
         decode() {
-            const rows = this.gridWidth;
-            const cols = this.gridHeight;
+            const rows = this.gridHeight;
+            const cols = this.gridWidth;
             const totalPixels = rows * cols;
             const pixels = [];
 

@@ -9,12 +9,18 @@
             <div class="size-inputs">
                 <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
                 <v-text-field label="Grid-height" placeholder="Size" v-model="gridHeight"></v-text-field>
+                <v-btn-toggle>
+                    <v-btn @click="x" icon="mdi-link-off"></v-btn>
+                </v-btn-toggle>
                 <v-text-field label="Grid-width" placeholder="Size" v-model="gridWidth"></v-text-field>
                 <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
             </div>
             <div class="size-inputs">
                 <v-btn @click="scaleImageDown" icon="mdi-minus"></v-btn>
                 <v-text-field label="Image-height" placeholder="Size" v-model="imageHeight"></v-text-field>
+                <v-btn-toggle>
+                    <v-btn @click="x" icon="mdi-link-off"></v-btn>
+                </v-btn-toggle>
                 <v-text-field label="Image-width" placeholder="Size" v-model="imageWidth"></v-text-field>
                 <v-btn @click="scaleImageUp" icon="mdi-plus"></v-btn>
             </div>
