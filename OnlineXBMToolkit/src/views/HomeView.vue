@@ -8,15 +8,23 @@
                 <v-btn @click="reset" prepend-icon="mdi-delete"> Reset </v-btn>
 
                 <div class="size-inputs">
-                    <v-text-field label="Grid-height" placeholder="Size" v-model="gridHeight"></v-text-field>
-                    <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
-                    <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
+                    <div class="size-input">
+                        <v-text-field label="Grid-height" placeholder="Size" v-model="gridHeight"></v-text-field>
+                        <div>
+                            <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
+                            <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
+                        </div>
+                    </div>
                     <v-btn-toggle>
                         <v-btn @click="x" icon="mdi-link-off"></v-btn>
                     </v-btn-toggle>
-                    <v-text-field label="Grid-width" placeholder="Size" v-model="gridWidth"></v-text-field>
-                    <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
-                    <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
+                    <div class="size-input">
+                        <v-text-field label="Grid-width" placeholder="Size" v-model="gridWidth"></v-text-field>
+                        <div>
+                            <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
+                            <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
+                        </div>
+                    </div>
                 </div>
                 <div class="size-inputs">
                     <v-btn @click="scaleImageDown" icon="mdi-minus"></v-btn>
@@ -29,21 +37,11 @@
                 </div>
             </v-card>
 
-
             <v-card prepend-icon="mdi-download" title="Output" class="card-container" variant="tonal">
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
-                <v-container>
-                    <v-row>
-                        <v-col cols="12" sm="9">
-                            <v-text-field v-model="text" label="Copy this text" readonly></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="3">
-                            <v-btn @click="copyText">
-                                Copy
-                            </v-btn>
-                        </v-col>
-                    </v-row>
-                </v-container>
+                <v-btn @click="copyText" prepend-icon="mdi-content-copy"> Copy array </v-btn>
+                <!-- <v-text-field title="Input" class="ma-0 pa-0" v-model="text"></v-text-field> -->
+                <v-textarea class="pa-0" label="Formatted array:"></v-textarea>
             </v-card>
         </div>
     </div>
@@ -196,11 +194,16 @@ export default {
 
 .size-inputs {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
-.size-inputs>* {
-    margin: 0.25rem;
+.size-inputs>* {}
+
+.size-input {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
 }
 
 
