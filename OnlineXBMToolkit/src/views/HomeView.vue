@@ -29,7 +29,6 @@
                 </div>
             </v-card>
 
-            <v-divider :thickness="6" vertical></v-divider>
 
             <v-card prepend-icon="mdi-download" title="Output" class="card-container" variant="tonal">
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
@@ -48,7 +47,6 @@
             </v-card>
         </div>
     </div>
-    <v-divider :thickness="6"></v-divider>
 
     <v-card prepend-icon="mdi-pencil" title="Edit" class="card-container edit-card" variant="tonal">
         <xbmEditor ref="xbmEditor" class="xbm-tool" :xbmArray="xbmArray" :gridWidth="gridWidth" :gridHeight="gridHeight"
