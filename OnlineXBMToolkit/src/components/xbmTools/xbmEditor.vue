@@ -1,11 +1,9 @@
 <template>
-    <div class="icon-container">
-        <div v-for="(row, rowIndex) in pixels" :key="rowIndex" class="pixel-row">
-            <div v-for="(pixel, colIndex) in row" :key="colIndex" class="pixel"
-                :style="{ backgroundColor: pixel ? 'white' : 'black' }" @click="togglePixel(rowIndex, colIndex)"
-                @mousedown="startPainting(rowIndex, colIndex)" @mouseup="stopPainting"
-                @mousemove="paintPixel(rowIndex, colIndex)">
-            </div>
+    <div v-for="(row, rowIndex) in pixels" :key="rowIndex" class="pixel-row">
+        <div v-for="(pixel, colIndex) in row" :key="colIndex" class="pixel"
+            :style="{ backgroundColor: pixel ? 'white' : 'black' }" @click="togglePixel(rowIndex, colIndex)"
+            @mousedown="startPainting(rowIndex, colIndex)" @mouseup="stopPainting"
+            @mousemove="paintPixel(rowIndex, colIndex)">
         </div>
     </div>
 </template>
@@ -154,23 +152,13 @@ export default {
 </script>
   
 <style scoped>
-.icon-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 100%;
-    margin: 0 auto;
-    overflow: hidden;
-}
-
-
 .pixel-row {
     display: flex;
 }
 
 .pixel {
-    flex: 1;
+    width: 1vh;
     aspect-ratio: 1;
-    cursor: pointer;
     border: 1px solid #ccc;
     cursor: pointer;
 }

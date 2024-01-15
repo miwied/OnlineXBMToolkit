@@ -1,53 +1,56 @@
 <template>
     <div class="xbm-tool-container">
-        <v-card prepend-icon="mdi-publish" title="Input" class="card-container" variant="tonal">
-            <v-file-input ref="fileInput" style="display: none;" @change="handleFileChange"
-                accept=".svg, .png, .jpg, .jpeg"></v-file-input>
-            <v-btn @click="handleUpload" prepend-icon="mdi-publish"> Upload image file </v-btn>
-            <v-btn @click="reset" prepend-icon="mdi-delete"> Reset </v-btn>
+        <div class="input-output-container">
+            <v-card prepend-icon="mdi-publish" title="Input" class="card-container" variant="tonal">
+                <v-file-input ref="fileInput" style="display: none;" @change="handleFileChange"
+                    accept=".svg, .png, .jpg, .jpeg"></v-file-input>
+                <v-btn @click="handleUpload" prepend-icon="mdi-publish"> Upload image file </v-btn>
+                <v-btn @click="reset" prepend-icon="mdi-delete"> Reset </v-btn>
 
-            <div class="size-inputs">
-                <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
-                <v-text-field label="Grid-height" placeholder="Size" v-model="gridHeight"></v-text-field>
-                <v-btn-toggle>
-                    <v-btn @click="x" icon="mdi-link-off"></v-btn>
-                </v-btn-toggle>
-                <v-text-field label="Grid-width" placeholder="Size" v-model="gridWidth"></v-text-field>
-                <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
-            </div>
-            <div class="size-inputs">
-                <v-btn @click="scaleImageDown" icon="mdi-minus"></v-btn>
-                <v-text-field label="Image-height" placeholder="Size" v-model="imageHeight"></v-text-field>
-                <v-btn-toggle>
-                    <v-btn @click="x" icon="mdi-link-off"></v-btn>
-                </v-btn-toggle>
-                <v-text-field label="Image-width" placeholder="Size" v-model="imageWidth"></v-text-field>
-                <v-btn @click="scaleImageUp" icon="mdi-plus"></v-btn>
-            </div>
-        </v-card>
+                <div class="size-inputs">
+                    <v-text-field label="Grid-height" placeholder="Size" v-model="gridHeight"></v-text-field>
+                    <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
+                    <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
+                    <v-btn-toggle>
+                        <v-btn @click="x" icon="mdi-link-off"></v-btn>
+                    </v-btn-toggle>
+                    <v-text-field label="Grid-width" placeholder="Size" v-model="gridWidth"></v-text-field>
+                    <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
+                    <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
+                </div>
+                <div class="size-inputs">
+                    <v-btn @click="scaleImageDown" icon="mdi-minus"></v-btn>
+                    <v-text-field label="Image-height" placeholder="Size" v-model="imageHeight"></v-text-field>
+                    <v-btn-toggle>
+                        <v-btn @click="x" icon="mdi-link-off"></v-btn>
+                    </v-btn-toggle>
+                    <v-text-field label="Image-width" placeholder="Size" v-model="imageWidth"></v-text-field>
+                    <v-btn @click="scaleImageUp" icon="mdi-plus"></v-btn>
+                </div>
+            </v-card>
 
-        <v-divider :thickness="6" vertical></v-divider>
+            <v-divider :thickness="6" vertical></v-divider>
 
-        <v-card prepend-icon="mdi-download" title="Output" class="card-container" variant="tonal">
-            <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
-            <v-container>
-                <v-row>
-                    <v-col cols="12" sm="9">
-                        <v-text-field v-model="text" label="Copy this text" readonly></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <v-btn @click="copyText">
-                            Copy
-                        </v-btn>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-card>
+            <v-card prepend-icon="mdi-download" title="Output" class="card-container" variant="tonal">
+                <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
+                <v-container>
+                    <v-row>
+                        <v-col cols="12" sm="9">
+                            <v-text-field v-model="text" label="Copy this text" readonly></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3">
+                            <v-btn @click="copyText">
+                                Copy
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-card>
+        </div>
     </div>
-
     <v-divider :thickness="6"></v-divider>
 
-    <v-card prepend-icon="mdi-pencil" title="Edit" class="card-container" variant="tonal">
+    <v-card prepend-icon="mdi-pencil" title="Edit" class="card-container edit-card" variant="tonal">
         <xbmEditor ref="xbmEditor" class="xbm-tool" :xbmArray="xbmArray" :gridWidth="gridWidth" :gridHeight="gridHeight"
             @update-array="updateArray" />
         <div class="editor-buttons">
@@ -183,21 +186,25 @@ export default {
 <style scoped>
 .xbm-tool-container {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
 }
 
-.xbm-tool {
-    width: 50%;
+.input-output-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .size-inputs {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .size-inputs>* {
-    margin: 0.5rem;
+    margin: 0.25rem;
 }
+
 
 .editor-buttons {
     display: flex;
@@ -213,18 +220,17 @@ export default {
 }
 
 .card-container {
+    display: flex;
+    flex: 1;
     margin: 0.5rem;
     padding: 0.5rem;
-    width: 100%;
-}
-
-.card-container {
-    display: flex;
+    align-items: center;
+    min-width: 300px;
     flex-direction: column;
 }
 
 .card-container>* {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin: 0.5rem;
+    width: 100%;
 }
 </style>

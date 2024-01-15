@@ -10,7 +10,7 @@ nav {
     height: 2.7rem;
     padding: 0.1rem 0.25rem 0.1rem;
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
     background-color: #2B2B2B;
 }
