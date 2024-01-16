@@ -9,39 +9,54 @@
 
                 <div class="size-inputs">
                     <div class="size-input">
-                        <v-text-field label="Grid-height" placeholder="Size" v-model="gridHeight"></v-text-field>
-                        <div>
-                            <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
-                            <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
+                        <v-text-field label="Image-height" v-model="imageHeight" suffix="px" hide-details></v-text-field>
+                        <div class="size-buttons">
+                            <v-btn class="square-icon-btn" icon="mdi-minus" block></v-btn>
+                            <v-btn class="square-icon-btn" icon="mdi-plus" block></v-btn>
                         </div>
                     </div>
-                    <v-btn-toggle>
-                        <v-btn @click="x" icon="mdi-link-off"></v-btn>
-                    </v-btn-toggle>
+                    <v-btn @click="x" icon="mdi-link-off"></v-btn>
                     <div class="size-input">
-                        <v-text-field label="Grid-width" placeholder="Size" v-model="gridWidth"></v-text-field>
-                        <div>
-                            <v-btn @click="scaleGridDown" icon="mdi-minus"></v-btn>
-                            <v-btn @click="scaleGridUp" icon="mdi-plus"></v-btn>
+                        <v-text-field label="Image-witdh" v-model="imageWidth" suffix="px" hide-details></v-text-field>
+                        <div class="size-buttons">
+                            <v-btn @click="scaleImageDown" class="square-icon-btn" icon="mdi-minus" block></v-btn>
+                            <v-btn @click="scaleImageUp" class="square-icon-btn" icon="mdi-plus" block></v-btn>
                         </div>
                     </div>
                 </div>
+
                 <div class="size-inputs">
+                    <div class="size-input">
+                        <v-text-field label="Grid-height" v-model="gridHeight" suffix="px" hide-details></v-text-field>
+                        <div class="size-buttons">
+                            <v-btn class="square-icon-btn" icon="mdi-minus" block></v-btn>
+                            <v-btn class="square-icon-btn" icon="mdi-plus" block></v-btn>
+                        </div>
+                    </div>
+                    <v-btn @click="x" icon="mdi-link-off"></v-btn>
+                    <div class="size-input">
+                        <v-text-field label="Grid-witdh" v-model="gridWidth" suffix="px" hide-details></v-text-field>
+                        <div class="size-buttons">
+                            <v-btn class="square-icon-btn" icon="mdi-minus" block></v-btn>
+                            <v-btn class="square-icon-btn" icon="mdi-plus" block></v-btn>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="size-inputs">
                     <v-btn @click="scaleImageDown" icon="mdi-minus"></v-btn>
-                    <v-text-field label="Image-height" placeholder="Size" v-model="imageHeight"></v-text-field>
+                    <v-text-field label="Image-height" placeholder="Size" v-model="imageHeight" suffix="px"></v-text-field>
                     <v-btn-toggle>
                         <v-btn @click="x" icon="mdi-link-off"></v-btn>
                     </v-btn-toggle>
-                    <v-text-field label="Image-width" placeholder="Size" v-model="imageWidth"></v-text-field>
+                    <v-text-field label="Image-width" placeholder="Size" v-model="imageWidth" suffix="px"></v-text-field>
                     <v-btn @click="scaleImageUp" icon="mdi-plus"></v-btn>
-                </div>
+                </div> -->
             </v-card>
 
             <v-card prepend-icon="mdi-download" title="Output" class="card-container" variant="tonal">
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
                 <v-btn @click="copyText" prepend-icon="mdi-content-copy"> Copy array </v-btn>
-                <!-- <v-text-field title="Input" class="ma-0 pa-0" v-model="text"></v-text-field> -->
-                <v-textarea class="pa-0" label="Formatted array:"></v-textarea>
+                <v-textarea class="pa-0" label="Formatted array:" v-model="outputArray"></v-textarea>
             </v-card>
         </div>
     </div>
@@ -180,6 +195,10 @@ export default {
 </script>
   
 <style scoped>
+.square-icon-btn {
+    border-radius: 4px;
+}
+
 .xbm-tool-container {
     display: flex;
     flex-wrap: wrap;
@@ -194,18 +213,24 @@ export default {
 
 .size-inputs {
     display: flex;
+    flex-direction: row;
     justify-content: center;
+    align-items: center;
 }
 
-.size-inputs>* {}
+.size-inputs>* {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+}
 
 .size-input {
-    display: flex;
-    flex-direction: column;
     width: 100%;
-    justify-content: center;
 }
 
+.size-buttons {
+    display: flex;
+    width: 50%;
+}
 
 .editor-buttons {
     display: flex;
@@ -225,6 +250,8 @@ export default {
     flex: 1;
     margin: 0.5rem;
     padding: 0.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     align-items: center;
     min-width: 300px;
     flex-direction: column;
