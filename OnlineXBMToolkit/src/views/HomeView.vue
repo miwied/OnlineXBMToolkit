@@ -232,6 +232,13 @@ export default {
     width: 50%;
 }
 
+.size-buttons>* {
+    width: 90%;
+    background-color: rgb(54, 54, 54);
+    border-radius: 0.75rem;
+    border: 1px solid rgb(27, 27, 27);
+}
+
 .editor-buttons {
     display: flex;
 }
