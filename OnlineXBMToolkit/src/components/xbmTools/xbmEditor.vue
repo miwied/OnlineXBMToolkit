@@ -10,6 +10,7 @@
   
 <script>
 export default {
+    emits: ['update-array'],
     props: {
         xbmArray: {
             type: Array,
@@ -142,6 +143,8 @@ export default {
         },
         clearAll() {
             this.pixels = this.pixels.map(row => row.map(() => 0));
+            this.undoStack = [];
+            this.redoStack = [];
             this.encode();
         },
         shiftLeft() {

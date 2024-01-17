@@ -220,10 +220,10 @@ export default {
             this.$refs.xbmEditor.shiftDown();
         },
         rotateLeft() {
-            this.$refs.xbmEditor.rotateLeft()();
+            this.$refs.xbmEditor.rotateLeft();
         },
         rotateRight() {
-            this.$refs.xbmEditor.rotateRight()();
+            this.$refs.xbmEditor.rotateRight();
         },
         increaseSize(mainSizeProperty, optionalSizeProperty, equalSizeState) {
             if (this[mainSizeProperty] !== undefined) {
