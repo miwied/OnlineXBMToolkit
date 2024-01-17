@@ -11,46 +11,36 @@
                     <div class="size-input">
                         <v-text-field label="Image-height" v-model="imageHeight" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn class="square-icon-btn" icon="mdi-minus" block></v-btn>
-                            <v-btn class="square-icon-btn" icon="mdi-plus" block></v-btn>
+                            <v-btn style="font-size: 25px;">−</v-btn>
+                            <v-btn style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                     <v-btn @click="x" icon="mdi-link-off"></v-btn>
                     <div class="size-input">
                         <v-text-field label="Image-witdh" v-model="imageWidth" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn @click="scaleImageDown" class="square-icon-btn" icon="mdi-minus" block></v-btn>
-                            <v-btn @click="scaleImageUp" class="square-icon-btn" icon="mdi-plus" block></v-btn>
+                            <v-btn style="font-size: 25px;">−</v-btn>
+                            <v-btn style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                 </div>
-
                 <div class="size-inputs">
                     <div class="size-input">
                         <v-text-field label="Grid-height" v-model="gridHeight" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn class="square-icon-btn" icon="mdi-minus" block></v-btn>
-                            <v-btn class="square-icon-btn" icon="mdi-plus" block></v-btn>
+                            <v-btn style="font-size: 25px;">−</v-btn>
+                            <v-btn style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                     <v-btn @click="x" icon="mdi-link-off"></v-btn>
                     <div class="size-input">
                         <v-text-field label="Grid-witdh" v-model="gridWidth" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn class="square-icon-btn" icon="mdi-minus" block></v-btn>
-                            <v-btn class="square-icon-btn" icon="mdi-plus" block></v-btn>
+                            <v-btn style="font-size: 25px;">−</v-btn>
+                            <v-btn style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="size-inputs">
-                    <v-btn @click="scaleImageDown" icon="mdi-minus"></v-btn>
-                    <v-text-field label="Image-height" placeholder="Size" v-model="imageHeight" suffix="px"></v-text-field>
-                    <v-btn-toggle>
-                        <v-btn @click="x" icon="mdi-link-off"></v-btn>
-                    </v-btn-toggle>
-                    <v-text-field label="Image-width" placeholder="Size" v-model="imageWidth" suffix="px"></v-text-field>
-                    <v-btn @click="scaleImageUp" icon="mdi-plus"></v-btn>
-                </div> -->
             </v-card>
 
             <v-card prepend-icon="mdi-download" title="Output" class="card-container" variant="tonal">
@@ -195,10 +185,6 @@ export default {
 </script>
   
 <style scoped>
-.square-icon-btn {
-    border-radius: 4px;
-}
-
 .xbm-tool-container {
     display: flex;
     flex-wrap: wrap;
@@ -233,9 +219,8 @@ export default {
 }
 
 .size-buttons>* {
-    width: 90%;
+    width: 100%;
     background-color: rgb(54, 54, 54);
-    border-radius: 0.75rem;
     border: 1px solid rgb(27, 27, 27);
 }
 
