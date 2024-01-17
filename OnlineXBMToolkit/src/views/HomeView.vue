@@ -11,16 +11,22 @@
                     <div class="size-input">
                         <v-text-field label="Image-height" v-model="imageHeight" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn style="font-size: 25px;">−</v-btn>
-                            <v-btn style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('imageHeight', 'imageWidth', imageSizeIsEqual)"
+                                style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('imageHeight', 'imageWidth', imageSizeIsEqual)"
+                                style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
-                    <v-btn @click="x" icon="mdi-link-off"></v-btn>
+                    <v-btn @click="imageSizeIsEqual = !imageSizeIsEqual">
+                        <v-icon>{{ toggleImageSizeIcon }}</v-icon>
+                    </v-btn>
                     <div class="size-input">
                         <v-text-field label="Image-witdh" v-model="imageWidth" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn style="font-size: 25px;">−</v-btn>
-                            <v-btn style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('imageWidth', 'imageHeight', imageSizeIsEqual)"
+                                style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('imageWidth', 'imageHeight', imageSizeIsEqual)"
+                                style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                 </div>
@@ -28,16 +34,22 @@
                     <div class="size-input">
                         <v-text-field label="Grid-height" v-model="gridHeight" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn style="font-size: 25px;">−</v-btn>
-                            <v-btn style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('gridHeight', 'gridWidth', gridSizeIsEqual)"
+                                style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('gridHeight', 'gridWidth', gridSizeIsEqual)"
+                                style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
-                    <v-btn @click="x" icon="mdi-link-off"></v-btn>
+                    <v-btn @click="gridSizeIsEqual = !gridSizeIsEqual">
+                        <v-icon>{{ toggleGridSizeIcon }}</v-icon>
+                    </v-btn>
                     <div class="size-input">
                         <v-text-field label="Grid-witdh" v-model="gridWidth" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn style="font-size: 25px;">−</v-btn>
-                            <v-btn style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('gridWidth', 'gridHeight', gridSizeIsEqual)"
+                                style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('gridWidth', 'gridHeight', gridSizeIsEqual)"
+                                style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                 </div>
@@ -90,7 +102,29 @@ export default {
             gridWidth: 24,
             imageHeight: 24,
             imageWidth: 24,
+            gridSizeIsEqual: true,
+            imageSizeIsEqual: true,
         };
+    },
+    computed: {
+        toggleGridSizeIcon() {
+            return this.gridSizeIsEqual ? 'mdi-link' : 'mdi-link-off';
+        },
+        toggleImageSizeIcon() {
+            return this.imageSizeIsEqual ? 'mdi-link' : 'mdi-link-off';
+        }
+    },
+    watch: {
+        gridSizeIsEqual: function (newVal, oldVal) {
+            if (this.gridSizeIsEqual && this.gridHeight !== this.gridWidth) {
+                this.gridHeight = this.gridWidth;
+            }
+        },
+        imageSizeIsEqual: function (newVal, oldVal) {
+            if (this.imageSizeIsEqual && this.imageHeight !== this.imageWidth) {
+                this.imageHeight = this.imageWidth;
+            }
+        },
     },
     methods: {
         updateArray(array) {
@@ -152,34 +186,28 @@ export default {
         rotateRight() {
             this.$refs.xbmEditor.rotateRight()();
         },
-        scaleGridUp() {
-            this.gridWidth++;
-            this.gridHeight++;
-            if (this.originalImage != null && this.originalImage != undefined) {
-                this.$refs.xbmConverter.convertToXbm();
+        increaseSize(mainSizeProperty, optionalSizeProperty, equalSizeState) {
+            if (this[mainSizeProperty] !== undefined) {
+                this[mainSizeProperty]++;
             }
-        },
-        scaleGridDown() {
-            this.gridWidth--;
-            this.gridHeight--;
+            if (equalSizeState && this[optionalSizeProperty] !== undefined) {
+                this[optionalSizeProperty] = this[mainSizeProperty];
+            }
             if (this.originalImage !== null && this.originalImage !== undefined) {
                 this.$refs.xbmConverter.convertToXbm();
             }
         },
-        scaleImageUp() {
-            this.imageWidth++;
-            this.imageHeight++;
+        decreaseSize(mainSizeProperty, optionalSizeProperty, equalSizeState) {
+            if (this[mainSizeProperty] !== undefined) {
+                this[mainSizeProperty]--;
+            }
+            if (equalSizeState && this[optionalSizeProperty] !== undefined) {
+                this[optionalSizeProperty] = this[mainSizeProperty];
+            }
             if (this.originalImage !== null && this.originalImage !== undefined) {
                 this.$refs.xbmConverter.convertToXbm();
             }
-        },
-        scaleImageDown() {
-            this.imageWidth--;
-            this.imageHeight--;
-            if (this.originalImage !== null && this.originalImage !== undefined) {
-                this.$refs.xbmConverter.convertToXbm();
-            }
-        },
+        }
     }
 }
 </script>
