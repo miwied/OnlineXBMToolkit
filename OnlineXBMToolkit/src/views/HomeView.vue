@@ -1,7 +1,11 @@
 <template>
     <div class="xbm-tool-container">
         <div class="input-output-container">
-            <v-card prepend-icon="mdi-publish" title="Input" class="card-container" variant="tonal">
+            <v-card class="card-container" variant="tonal">
+                <div class="text-icon-container">
+                    <v-icon> {{ 'mdi-publish' }} </v-icon>
+                    <p class="text-h6">Input</p>
+                </div>
                 <v-file-input ref="fileInput" style="display: none;" @change="handleFileChange"
                     accept=".svg, .png, .jpg, .jpeg"></v-file-input>
                 <v-btn @click="handleUpload" prepend-icon="mdi-publish"> Upload image file </v-btn>
@@ -55,7 +59,11 @@
                 </div>
             </v-card>
 
-            <v-card prepend-icon="mdi-download" title="Output" class="card-container" variant="tonal">
+            <v-card class="card-container" variant="tonal">
+                <div class="text-icon-container">
+                    <v-icon> {{ 'mdi-download' }} </v-icon>
+                    <p class="text-h6">Output</p>
+                </div>
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
                 <v-btn @click="copyText" prepend-icon="mdi-content-copy"> Copy array </v-btn>
                 <v-textarea class="pa-0" label="Formatted array:" v-model="outputArray"></v-textarea>
@@ -63,7 +71,11 @@
         </div>
     </div>
 
-    <v-card prepend-icon="mdi-pencil" title="Edit" class="card-container edit-card" variant="tonal">
+    <v-card class="card-container" variant="tonal">
+        <div class="text-icon-container">
+            <v-icon> {{ 'mdi-pencil' }} </v-icon>
+            <p class="text-h6">Edit</p>
+        </div>
         <xbmEditor ref="xbmEditor" class="xbm-tool" :xbmArray="xbmArray" :gridWidth="gridWidth" :gridHeight="gridHeight"
             @update-array="updateArray" />
         <div class="editor-buttons">
@@ -216,6 +228,18 @@ export default {
 .xbm-tool-container {
     display: flex;
     flex-wrap: wrap;
+}
+
+.text-icon-container {
+    display: flex;
+    align-items: center;
+    color: rgb(107, 107, 107);
+    justify-content: center;
+}
+
+.text-icon-container>* {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
 }
 
 .input-output-container {
