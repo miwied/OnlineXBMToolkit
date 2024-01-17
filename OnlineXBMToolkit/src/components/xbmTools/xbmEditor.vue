@@ -87,7 +87,6 @@ export default {
             }
 
             this.$emit("update-array", encodedArray);
-            console.log(this.encodeAsStringArray(encodedArray).toString());
             return encodedArray;
         },
         togglePixel(rowIndex, colIndex) {

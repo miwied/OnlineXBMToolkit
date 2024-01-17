@@ -4,12 +4,12 @@
             <v-card class="card-container" variant="tonal">
                 <div class="text-icon-container">
                     <v-icon> {{ 'mdi-publish' }} </v-icon>
-                    <p class="text-h6">Input</p>
+                    <p class="text-h6">&nbsp;Input</p>
                 </div>
                 <v-file-input ref="fileInput" style="display: none;" @change="handleFileChange"
                     accept=".svg, .png, .jpg, .jpeg"></v-file-input>
                 <v-btn @click="handleUpload" prepend-icon="mdi-publish"> Upload image file </v-btn>
-                <v-btn @click="reset" prepend-icon="mdi-delete"> Reset </v-btn>
+                <v-btn @click="reset" prepend-icon="mdi-restart"> Reset all </v-btn>
 
                 <div class="size-inputs">
                     <div class="size-input">
@@ -62,7 +62,7 @@
             <v-card class="card-container" variant="tonal">
                 <div class="text-icon-container">
                     <v-icon> {{ 'mdi-download' }} </v-icon>
-                    <p class="text-h6">Output</p>
+                    <p class="text-h6">&nbsp;Output</p>
                 </div>
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
                 <v-btn @click="copyText" prepend-icon="mdi-content-copy"> Copy array </v-btn>
@@ -72,22 +72,30 @@
     </div>
 
     <v-card class="card-container" variant="tonal">
-        <div class="text-icon-container">
-            <v-icon> {{ 'mdi-pencil' }} </v-icon>
-            <p class="text-h6">Edit</p>
+        <v-btn class="text-icon-container" @click="isEditMode = !isEditMode">
+            <v-icon> {{ toggleEditModeIcon }} </v-icon>
+            <p class="text-h6">&nbsp; {{ toggleEditModeText }}</p>
+        </v-btn>
+        <div class="card-container" v-if="isEditMode">
+            <xbmEditor ref="xbmEditor" :xbmArray="xbmArray" :gridWidth="gridWidth" :gridHeight="gridHeight"
+                @update-array="updateArray" />
+            <div class="editor-buttons">
+                <v-btn @click="rotateLeft" icon="mdi-rotate-left"></v-btn>
+                <v-btn @click="shiftLeft" icon="mdi-chevron-left"></v-btn>
+                <v-btn @click="shiftRight" icon="mdi-chevron-right"></v-btn>
+                <v-btn @click="shiftUp" icon="mdi-chevron-up"></v-btn>
+                <v-btn @click="shiftDown" icon="mdi-chevron-down"></v-btn>
+                <v-btn @click="rotateRight" icon="mdi-rotate-right"></v-btn>
+            </div>
+            <div class="editor-buttons">
+                <v-btn @click="undo" prepend-icon="mdi-undo"> Undo </v-btn>
+                <v-btn @click="redo" prepend-icon="mdi-redo"> Redo </v-btn>
+                <v-btn @click="invert" prepend-icon="mdi-invert-colors"> Invert </v-btn>
+                <v-btn @click="clear" prepend-icon="mdi-delete"> Clear </v-btn>
+            </div>
         </div>
-        <xbmEditor ref="xbmEditor" class="xbm-tool" :xbmArray="xbmArray" :gridWidth="gridWidth" :gridHeight="gridHeight"
-            @update-array="updateArray" />
-        <div class="editor-buttons">
-            <v-btn @click="rotateLeft" icon="mdi-rotate-left"></v-btn>
-            <v-btn @click="shiftLeft" icon="mdi-chevron-left"></v-btn>
-            <v-btn @click="shiftRight" icon="mdi-chevron-right"></v-btn>
-            <v-btn @click="shiftUp" icon="mdi-chevron-up"></v-btn>
-            <v-btn @click="shiftDown" icon="mdi-chevron-down"></v-btn>
-            <v-btn @click="rotateRight" icon="mdi-rotate-right"></v-btn>
-        </div>
-        <div class="editor-buttons">
-            <v-btn @click="invert" prepend-icon="mdi-invert-colors"> Invert </v-btn>
+        <div class="card-container" v-else>
+            <xbmViewer ref="xbmViewer" :xbmArray="xbmArray" :gridWidth="gridWidth" :gridHeight="gridHeight" />
         </div>
     </v-card>
 
@@ -116,6 +124,7 @@ export default {
             imageWidth: 24,
             gridSizeIsEqual: true,
             imageSizeIsEqual: true,
+            isEditMode: true,
         };
     },
     computed: {
@@ -124,7 +133,13 @@ export default {
         },
         toggleImageSizeIcon() {
             return this.imageSizeIsEqual ? 'mdi-link' : 'mdi-link-off';
-        }
+        },
+        toggleEditModeIcon() {
+            return this.isEditMode ? 'mdi-eye' : 'mdi-pencil';
+        },
+        toggleEditModeText() {
+            return this.isEditMode ? 'Preview' : 'Edit';
+        },
     },
     watch: {
         gridSizeIsEqual: function (newVal, oldVal) {
@@ -170,15 +185,25 @@ export default {
         reset() {
             this.xbmArray = [];
             this.originalImage = '';
-            this.$refs.xbmEditor.clearAll();
-            this.$refs.fileInput.value = null;
-            this.imageHeight = 24;
-            this.imageWidth = 24;
             this.gridHeight = 24;
             this.gridWidth = 24;
+            this.imageHeight = 24;
+            this.imageWidth = 24;
+            this.gridSizeIsEqual = true;
+            this.imageSizeIsEqual = true;
+            this.isEditMode = true;
+            this.$refs.fileInput.value = null;
+            this.$refs.xbmEditor.clearAll();
+        },
+        undo() {
+        },
+        redo() {
         },
         invert() {
             this.$refs.xbmEditor.invert();
+        },
+        clear() {
+            this.$refs.xbmEditor.clearAll();
         },
         shiftLeft() {
             this.$refs.xbmEditor.shiftLeft();
@@ -235,11 +260,13 @@ export default {
     align-items: center;
     color: rgb(107, 107, 107);
     justify-content: center;
+    max-width: 15%;
 }
 
-.text-icon-container>* {
-    margin-left: 0.25rem;
-    margin-right: 0.25rem;
+@media only screen and (max-width: 600px) {
+    .text-icon-container {
+        max-width: 35%;
+    }
 }
 
 .input-output-container {
@@ -291,14 +318,14 @@ export default {
 
 .card-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     flex: 1;
     margin: 0.5rem;
     padding: 0.5rem;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-    align-items: center;
     min-width: 300px;
-    flex-direction: column;
 }
 
 .card-container>* {
