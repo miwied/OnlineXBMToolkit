@@ -1,9 +1,7 @@
 <template>
-    <div class="icon-container">
-        <div v-for="(row, rowIndex) in pixels" :key="rowIndex" class="pixel-row">
-            <div v-for="(pixel, colIndex) in row" :key="colIndex" class="pixel"
-                :style="{ backgroundColor: pixel ? 'white' : 'transparent' }">
-            </div>
+    <div v-for="(row, rowIndex) in pixels" :key="rowIndex" class="pixel-row">
+        <div v-for="(pixel, colIndex) in row" :key="colIndex" class="pixel"
+            :style="{ backgroundColor: pixel ? 'white' : 'transparent' }">
         </div>
     </div>
 </template>
@@ -74,22 +72,13 @@ export default {
 </script>
   
 <style scoped>
-.icon-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 100%;
-    margin: 0 auto;
-    overflow: hidden;
-}
-
 .pixel-row {
     display: flex;
 }
 
 .pixel {
-    flex: 1;
+    width: 1vh;
     aspect-ratio: 1;
-    cursor: pointer;
 }
 </style>
   

@@ -159,8 +159,8 @@ export default {
 .pixel {
     width: 1vh;
     aspect-ratio: 1;
-    border: 1px solid #ccc;
     cursor: pointer;
+    border: 1px solid #ccc;
 }
 </style>
   
