@@ -196,8 +196,10 @@ export default {
             this.$refs.xbmEditor.clearAll();
         },
         undo() {
+            this.$refs.xbmEditor.undo();
         },
         redo() {
+            this.$refs.xbmEditor.redo();
         },
         invert() {
             this.$refs.xbmEditor.invert();

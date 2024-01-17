@@ -40,8 +40,11 @@ export default {
     data() {
         return {
             pixels: [],
-            isPainting: false,
+            undoStack: [],
+            redoStack: [],
             initialColor: 1,
+            isPainting: false,
+            pixelChanged: false,
         };
     },
     mounted() {
@@ -70,7 +73,12 @@ export default {
             const hexStringArray = encodedArray.map(value => '0x' + value.toString(16).padStart(2, '0'));
             return hexStringArray;
         },
-        encode() {
+        encode(saveHistory = true) {
+            if (saveHistory) {
+                this.undoStack.push(JSON.parse(JSON.stringify(this.pixels)));
+                this.redoStack = [];
+            }
+
             const rows = this.gridWidth;
             const cols = this.gridHeight;
             const totalPixels = rows * cols;
@@ -89,11 +97,28 @@ export default {
             this.$emit("update-array", encodedArray);
             return encodedArray;
         },
+        undo() {
+            if (this.undoStack.length > 0) {
+                const previousState = this.undoStack.pop();
+                this.redoStack.push(JSON.parse(JSON.stringify(this.pixels)));
+                this.pixels = previousState;
+                this.encode(false);
+            }
+        },
+
+        redo() {
+            if (this.redoStack.length > 0) {
+                const nextState = this.redoStack.pop();
+                this.undoStack.push(JSON.parse(JSON.stringify(this.pixels)));
+                this.pixels = nextState;
+                this.encode(false);
+            }
+        },
         togglePixel(rowIndex, colIndex) {
             if (!this.isPainting) {
                 this.pixels[rowIndex][colIndex] = !this.pixels[rowIndex][colIndex];
+                this.pixelChanged = true;
             }
-            this.encode();
         },
         startPainting(rowIndex, colIndex) {
             this.isPainting = true;
@@ -102,7 +127,10 @@ export default {
         },
         stopPainting() {
             this.isPainting = false;
-            this.encode();
+            if (this.pixelChanged) {
+                this.encode();
+                this.pixelChanged = false;
+            }
         },
         paintPixel(rowIndex, colIndex) {
             if (this.isPainting) {
