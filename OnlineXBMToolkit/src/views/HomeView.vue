@@ -147,26 +147,26 @@ export default {
         gridHeight: function (newVal, oldVal) {
             if (this.gridSizeIsEqual) {
                 this.gridWidth = this.gridHeight;
-                this.convertToXbm();
             }
+            this.convertToXbm();
         },
         gridWidth: function (newVal, oldVal) {
             if (this.gridSizeIsEqual) {
                 this.gridHeight = this.gridWidth;
-                this.convertToXbm();
             }
+            this.convertToXbm();
         },
         imageHeight: function (newVal, oldVal) {
             if (this.imageSizeIsEqual) {
                 this.imageWidth = this.imageHeight;
-                this.convertToXbm();
             }
+            this.convertToXbm();
         },
         imageWidth: function (newVal, oldVal) {
             if (this.imageSizeIsEqual) {
                 this.imageHeight = this.imageWidth;
-                this.convertToXbm();
             }
+            this.convertToXbm();
         },
     },
     methods: {
@@ -243,13 +243,11 @@ export default {
             if (this[mainSizeProperty] !== undefined) {
                 this[mainSizeProperty]++;
             }
-            this.convertToXbm();
         },
         decreaseSize(mainSizeProperty) {
             if (this[mainSizeProperty] !== undefined) {
                 this[mainSizeProperty]--;
             }
-            this.convertToXbm();
         },
         convertToXbm() {
             if (this.originalImage !== null && this.originalImage !== undefined) {
