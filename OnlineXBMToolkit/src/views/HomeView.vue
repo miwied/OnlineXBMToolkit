@@ -6,6 +6,10 @@
                     <v-icon> {{ 'mdi-publish' }} </v-icon>
                     <p class="text-h6">&nbsp;Input</p>
                 </div>
+                <div class="image-details-container" v-if="imageName !== null">
+                    <p>{{ imageName }}</p>
+                    <v-btn @click="clear" icon="mdi-close" variant="plain"></v-btn>
+                </div>
                 <v-file-input ref="fileInput" style="display: none;" @change="handleFileChange"
                     accept=".svg, .png, .jpg, .jpeg"></v-file-input>
                 <v-btn @click="handleUpload" prepend-icon="mdi-publish"> Upload image file </v-btn>
@@ -110,6 +114,7 @@ export default {
         return {
             xbmArray: [],
             originalImage: null,
+            imageName: null,
             gridHeight: 24,
             gridWidth: 24,
             imageHeight: 24,
@@ -177,6 +182,8 @@ export default {
             const file = event.target.files[0];
 
             if (file) {
+                this.imageName = file.name;
+                console.log(this.imageName);
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     this.originalImage = e.target.result;
@@ -194,6 +201,16 @@ export default {
             this.$refs.fileInput.click();
         },
         handleDownload() {
+            // const xbmContent = this.convertArrayToXBM(this.xbmArray);
+            // const blob = new Blob([xbmContent], { type: 'text/plain' });
+            // const url = window.URL.createObjectURL(blob);
+            // const link = document.createElement('a');
+            // link.href = url;
+            // link.download = `${this.imageName}.xbm`;
+            // document.body.appendChild(link);
+            // link.click();
+            // document.body.removeChild(link);
+            // window.URL.revokeObjectURL(url);
         },
         onConvertedXbmArray(array) {
             this.xbmArray = array;
@@ -255,6 +272,7 @@ export default {
             }
         },
         resetImageData() {
+            this.imageName = null;
             this.originalImage = null;
             this.$refs.fileInput.value = null;
         },
@@ -274,6 +292,13 @@ export default {
     color: rgb(107, 107, 107);
     justify-content: center;
     max-width: 15%;
+}
+
+.image-details-container {
+    display: flex;
+    align-items: center;
+    color: rgb(107, 107, 107);
+    justify-content: center;
 }
 
 @media only screen and (max-width: 600px) {
