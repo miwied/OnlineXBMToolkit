@@ -145,25 +145,25 @@ export default {
             }
         },
         gridHeight: function (newVal, oldVal) {
-            if (this.gridSizeIsEqual) {
+            if (this.gridSizeIsEqual && this.gridWidth !== this.gridHeight) {
                 this.gridWidth = this.gridHeight;
             }
             this.convertToXbm();
         },
         gridWidth: function (newVal, oldVal) {
-            if (this.gridSizeIsEqual) {
+            if (this.gridSizeIsEqual && this.gridWidth !== this.gridHeight) {
                 this.gridHeight = this.gridWidth;
             }
             this.convertToXbm();
         },
         imageHeight: function (newVal, oldVal) {
-            if (this.imageSizeIsEqual) {
+            if (this.imageSizeIsEqual && this.imageWidth !== this.imageHeight) {
                 this.imageWidth = this.imageHeight;
             }
             this.convertToXbm();
         },
         imageWidth: function (newVal, oldVal) {
-            if (this.imageSizeIsEqual) {
+            if (this.imageSizeIsEqual && this.imageWidth !== this.imageHeight) {
                 this.imageHeight = this.imageWidth;
             }
             this.convertToXbm();
