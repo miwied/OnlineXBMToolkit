@@ -15,10 +15,8 @@
                     <div class="size-input">
                         <v-text-field label="Image-height" v-model="imageHeight" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn @click="decreaseSize('imageHeight', 'imageWidth', imageSizeIsEqual)"
-                                style="font-size: 25px;">−</v-btn>
-                            <v-btn @click="increaseSize('imageHeight', 'imageWidth', imageSizeIsEqual)"
-                                style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('imageHeight')" style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('imageHeight')" style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                     <v-btn @click="imageSizeIsEqual = !imageSizeIsEqual">
@@ -27,10 +25,8 @@
                     <div class="size-input">
                         <v-text-field label="Image-witdh" v-model="imageWidth" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn @click="decreaseSize('imageWidth', 'imageHeight', imageSizeIsEqual)"
-                                style="font-size: 25px;">−</v-btn>
-                            <v-btn @click="increaseSize('imageWidth', 'imageHeight', imageSizeIsEqual)"
-                                style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('imageWidth')" style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('imageWidth')" style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                 </div>
@@ -38,10 +34,8 @@
                     <div class="size-input">
                         <v-text-field label="Grid-height" v-model="gridHeight" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn @click="decreaseSize('gridHeight', 'gridWidth', gridSizeIsEqual)"
-                                style="font-size: 25px;">−</v-btn>
-                            <v-btn @click="increaseSize('gridHeight', 'gridWidth', gridSizeIsEqual)"
-                                style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('gridHeight')" style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('gridHeight')" style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                     <v-btn @click="gridSizeIsEqual = !gridSizeIsEqual">
@@ -50,10 +44,8 @@
                     <div class="size-input">
                         <v-text-field label="Grid-witdh" v-model="gridWidth" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn @click="decreaseSize('gridWidth', 'gridHeight', gridSizeIsEqual)"
-                                style="font-size: 25px;">−</v-btn>
-                            <v-btn @click="increaseSize('gridWidth', 'gridHeight', gridSizeIsEqual)"
-                                style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('gridWidth')" style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('gridWidth')" style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                 </div>
@@ -117,7 +109,7 @@ export default {
     data() {
         return {
             xbmArray: [],
-            originalImage: '',
+            originalImage: null,
             gridHeight: 24,
             gridWidth: 24,
             imageHeight: 24,
@@ -152,6 +144,30 @@ export default {
                 this.imageHeight = this.imageWidth;
             }
         },
+        gridHeight: function (newVal, oldVal) {
+            if (this.gridSizeIsEqual) {
+                this.gridWidth = this.gridHeight;
+                this.convertToXbm();
+            }
+        },
+        gridWidth: function (newVal, oldVal) {
+            if (this.gridSizeIsEqual) {
+                this.gridHeight = this.gridWidth;
+                this.convertToXbm();
+            }
+        },
+        imageHeight: function (newVal, oldVal) {
+            if (this.imageSizeIsEqual) {
+                this.imageWidth = this.imageHeight;
+                this.convertToXbm();
+            }
+        },
+        imageWidth: function (newVal, oldVal) {
+            if (this.imageSizeIsEqual) {
+                this.imageHeight = this.imageWidth;
+                this.convertToXbm();
+            }
+        },
     },
     methods: {
         updateArray(array) {
@@ -183,16 +199,13 @@ export default {
             this.xbmArray = array;
         },
         reset() {
+            this.resetImageData();
             this.xbmArray = [];
-            this.originalImage = '';
-            this.gridHeight = 24;
-            this.gridWidth = 24;
-            this.imageHeight = 24;
-            this.imageWidth = 24;
+            this.isEditMode = true;
             this.gridSizeIsEqual = true;
             this.imageSizeIsEqual = true;
-            this.isEditMode = true;
-            this.$refs.fileInput.value = null;
+            this.gridHeight = 24;
+            this.imageHeight = 24;
             this.$refs.xbmEditor.clearAll();
         },
         undo() {
@@ -205,6 +218,7 @@ export default {
             this.$refs.xbmEditor.invert();
         },
         clear() {
+            this.resetImageData();
             this.$refs.xbmEditor.clearAll();
         },
         shiftLeft() {
@@ -225,28 +239,27 @@ export default {
         rotateRight() {
             this.$refs.xbmEditor.rotateRight();
         },
-        increaseSize(mainSizeProperty, optionalSizeProperty, equalSizeState) {
+        increaseSize(mainSizeProperty) {
             if (this[mainSizeProperty] !== undefined) {
                 this[mainSizeProperty]++;
             }
-            if (equalSizeState && this[optionalSizeProperty] !== undefined) {
-                this[optionalSizeProperty] = this[mainSizeProperty];
+            this.convertToXbm();
+        },
+        decreaseSize(mainSizeProperty) {
+            if (this[mainSizeProperty] !== undefined) {
+                this[mainSizeProperty]--;
             }
+            this.convertToXbm();
+        },
+        convertToXbm() {
             if (this.originalImage !== null && this.originalImage !== undefined) {
                 this.$refs.xbmConverter.convertToXbm();
             }
         },
-        decreaseSize(mainSizeProperty, optionalSizeProperty, equalSizeState) {
-            if (this[mainSizeProperty] !== undefined) {
-                this[mainSizeProperty]--;
-            }
-            if (equalSizeState && this[optionalSizeProperty] !== undefined) {
-                this[optionalSizeProperty] = this[mainSizeProperty];
-            }
-            if (this.originalImage !== null && this.originalImage !== undefined) {
-                this.$refs.xbmConverter.convertToXbm();
-            }
-        }
+        resetImageData() {
+            this.originalImage = null;
+            this.$refs.fileInput.value = null;
+        },
     }
 }
 </script>
