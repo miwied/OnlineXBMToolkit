@@ -10,7 +10,6 @@
   
 <script>
 export default {
-    emits: ['update-array'],
     props: {
         xbmArray: {
             type: Array,
@@ -25,6 +24,7 @@ export default {
             required: true,
         },
     },
+    emits: ['update-array'],
     watch: {
         xbmArray: function (newVal, oldVal) {
             if (JSON.stringify(this.xbmArray) !== JSON.stringify(this.newVal)) {
@@ -41,11 +41,8 @@ export default {
     data() {
         return {
             pixels: [],
-            undoStack: [],
-            redoStack: [],
             initialColor: 1,
             isPainting: false,
-            pixelChanged: false,
         };
     },
     mounted() {
@@ -74,12 +71,7 @@ export default {
             const hexStringArray = encodedArray.map(value => '0x' + value.toString(16).padStart(2, '0'));
             return hexStringArray;
         },
-        encode(saveHistory = true) {
-            if (saveHistory) {
-                this.undoStack.push(JSON.parse(JSON.stringify(this.pixels)));
-                this.redoStack = [];
-            }
-
+        encode() {
             const rows = this.gridWidth;
             const cols = this.gridHeight;
             const totalPixels = rows * cols;
@@ -98,28 +90,11 @@ export default {
             this.$emit("update-array", encodedArray);
             return encodedArray;
         },
-        undo() {
-            if (this.undoStack.length > 0) {
-                const previousState = this.undoStack.pop();
-                this.redoStack.push(JSON.parse(JSON.stringify(this.pixels)));
-                this.pixels = previousState;
-                this.encode(false);
-            }
-        },
-
-        redo() {
-            if (this.redoStack.length > 0) {
-                const nextState = this.redoStack.pop();
-                this.undoStack.push(JSON.parse(JSON.stringify(this.pixels)));
-                this.pixels = nextState;
-                this.encode(false);
-            }
-        },
         togglePixel(rowIndex, colIndex) {
             if (!this.isPainting) {
                 this.pixels[rowIndex][colIndex] = !this.pixels[rowIndex][colIndex];
-                this.pixelChanged = true;
             }
+            this.encode();
         },
         startPainting(rowIndex, colIndex) {
             this.isPainting = true;
@@ -128,10 +103,7 @@ export default {
         },
         stopPainting() {
             this.isPainting = false;
-            if (this.pixelChanged) {
-                this.encode();
-                this.pixelChanged = false;
-            }
+            this.encode();
         },
         paintPixel(rowIndex, colIndex) {
             if (this.isPainting) {
@@ -143,8 +115,6 @@ export default {
         },
         clearAll() {
             this.pixels = this.pixels.map(row => row.map(() => 0));
-            this.undoStack = [];
-            this.redoStack = [];
             this.encode();
         },
         shiftLeft() {

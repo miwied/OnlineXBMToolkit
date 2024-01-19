@@ -186,7 +186,6 @@ export default {
     },
     methods: {
         updateArray(array) {
-            console.log("updating array");
             this.xbmArray = array;
         },
         handleFileChange(event) {
@@ -234,10 +233,10 @@ export default {
             this.$refs.xbmEditor.clearAll();
         },
         undo() {
-            this.$refs.xbmEditor.undo();
+            // this.$refs.xbmEditor.undo();
         },
         redo() {
-            this.$refs.xbmEditor.redo();
+            // this.$refs.xbmEditor.redo();
         },
         invert() {
             this.$refs.xbmEditor.invert();
