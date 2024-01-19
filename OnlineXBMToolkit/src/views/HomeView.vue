@@ -107,7 +107,7 @@
         </div>
     </v-card>
 
-    <v-snackbar v-model="snackbar.visible" :timeout="2000" :color="snackbar.color">
+    <v-snackbar v-model="snackbar.visible" :timeout="3000" :color="snackbar.color">
         {{ snackbar.text }}
         <template v-slot:actions>
             <v-btn color="black" variant="text" @click="snackbar.visible = false">
@@ -232,6 +232,13 @@ export default {
             const file = event.target.files[0];
 
             if (file) {
+                const allowedExtensions = /(\.svg|\.png|\.jpg|\.jpeg)$/i;
+                if (!allowedExtensions.exec(file.name)) {
+                    this.triggerSnackbar("Invalid file type. Please select a .svg, .png, .jpg, or .jpeg file.", 'deep-orange-lighten-2')
+                    event.target.value = '';
+                    return;
+                }
+
                 this.imageName = file.name;
                 const reader = new FileReader();
                 reader.onload = (e) => {
