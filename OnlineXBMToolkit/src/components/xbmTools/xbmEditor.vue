@@ -70,10 +70,6 @@ export default {
 
             this.pixels = pixels;
         },
-        encodeAsStringArray(encodedArray) {
-            const hexStringArray = encodedArray.map(value => '0x' + value.toString(16).padStart(2, '0'));
-            return hexStringArray;
-        },
         encode(saveHistory = true) {
             if (saveHistory) {
                 this.undoStack.push(JSON.parse(JSON.stringify(this.pixels)));

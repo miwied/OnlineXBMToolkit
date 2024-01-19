@@ -71,8 +71,10 @@
                     <p class="text-h6">&nbsp;Output</p>
                 </div>
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
-                <v-btn @click="copyText" prepend-icon="mdi-content-copy"> Copy array </v-btn>
-                <v-textarea class="pa-0" label="Formatted array:" v-model="outputArray"></v-textarea>
+                <v-btn @click="copyOutputArray" prepend-icon="mdi-content-copy"> Copy array </v-btn>
+
+                <v-textarea class="pa-0" label="Formatted array:" v-model="outputArray" style="font-family: monospace;"
+                    readonly rows="8"></v-textarea>
             </v-card>
         </div>
     </div>
@@ -105,7 +107,7 @@
         </div>
     </v-card>
 
-    <v-snackbar v-model="snackbar.visible" :timeout="2000" color="yellow-lighten-1">
+    <v-snackbar v-model="snackbar.visible" :timeout="2000" :color="snackbar.color">
         {{ snackbar.text }}
         <template v-slot:actions>
             <v-btn color="black" variant="text" @click="snackbar.visible = false">
@@ -135,6 +137,7 @@ export default {
     data() {
         return {
             xbmArray: [],
+            outputArray: '',
             originalImage: null,
             imageName: null,
             gridHeight: defaultSize,
@@ -147,6 +150,7 @@ export default {
             snackbar: {
                 visible: false,
                 text: '',
+                color: '',
             },
         };
     },
@@ -192,7 +196,7 @@ export default {
                 this.imageWidth = this.imageHeight;
             }
             if ((this.originalImage === null || this.originalImage === undefined) && newVal !== defaultSize) {
-                this.triggerSnackbar('Please upload an image to view the updated size dimensions.');
+                this.triggerSnackbar('Please upload an image to view the updated size dimensions.', 'yellow-lighten-1');
             }
             this.convertToXbm();
         },
@@ -201,18 +205,28 @@ export default {
                 this.imageHeight = this.imageWidth;
             }
             if ((this.originalImage === null || this.originalImage === undefined) && newVal !== defaultSize) {
-                this.triggerSnackbar('Please upload an image to view the updated size dimensions.');
+                this.triggerSnackbar('Please upload an image to view the updated size dimensions.', 'yellow-lighten-1');
             }
             this.convertToXbm();
         },
     },
     methods: {
-        triggerSnackbar(message) {
+        triggerSnackbar(message, color) {
             this.snackbar.text = message;
+            this.snackbar.color = color;
             this.snackbar.visible = true;
         },
         updateArray(array) {
             this.xbmArray = array;
+            this.outputArray = this.$refs.xbmConverter.convertXbmArrayToXbmString(array, this.imageName);
+        },
+        reset() {
+            this.resetImageData();
+            this.xbmArray = [];
+            this.isEditMode = true;
+            this.resetImageSize();
+            this.resetGridSize();
+            this.$refs.xbmEditor.clearAll();
         },
         handleFileChange(event) {
             const file = event.target.files[0];
@@ -236,27 +250,34 @@ export default {
             this.$refs.fileInput.click();
         },
         handleDownload() {
-            // const xbmContent = this.convertArrayToXBM(this.xbmArray);
-            // const blob = new Blob([xbmContent], { type: 'text/plain' });
-            // const url = window.URL.createObjectURL(blob);
-            // const link = document.createElement('a');
-            // link.href = url;
-            // link.download = `${this.imageName}.xbm`;
-            // document.body.appendChild(link);
-            // link.click();
-            // document.body.removeChild(link);
-            // window.URL.revokeObjectURL(url);
+            if (this.outputArray === '') {
+                return;
+            }
+            const regex = /\.\w+$/;
+            let adjustedImageName = (str => str ? str : 'image')(this.imageName);
+            // remove file extensions
+            adjustedImageName = adjustedImageName.replace(regex, '');
+
+            const blob = new Blob([this.outputArray], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${adjustedImageName}.xbm`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        },
+        async copyOutputArray() {
+            try {
+                await navigator.clipboard.writeText(this.outputArray);
+                this.triggerSnackbar("Array copied successfully.", 'green-lighten-2')
+            } catch (err) {
+                this.triggerSnackbar("Array could be not copied.", 'deep-orange-lighten-2')
+            }
         },
         onConvertedXbmArray(array) {
             this.xbmArray = array;
-        },
-        reset() {
-            this.resetImageData();
-            this.xbmArray = [];
-            this.isEditMode = true;
-            this.resetImageSize();
-            this.resetGridSize();
-            this.$refs.xbmEditor.clearAll();
         },
         undo() {
             this.$refs.xbmEditor.undo();
@@ -317,7 +338,10 @@ export default {
             this.gridSizeIsEqual = true;
             this.gridHeight = defaultSize;
         },
-    }
+    },
+    mounted() {
+        this.reset();
+    },
 }
 </script>
   

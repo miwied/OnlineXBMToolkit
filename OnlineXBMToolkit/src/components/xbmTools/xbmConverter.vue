@@ -112,6 +112,21 @@ export default {
 
             return encodedArray;
         },
+        convertXbmArrayToXbmString(encodedArray, imageName, cFormat = true) {
+            let xbmContent = '';
+
+            const regex = /\.\w+$/;
+            let adjustedImageName = (str => str ? str : 'image')(imageName);
+            // remove file extensions
+            adjustedImageName = adjustedImageName.replace(regex, '');
+
+            if (cFormat) {
+                xbmContent += `#define ${adjustedImageName}_width ${this.gridWidth}\n#define ${adjustedImageName}_height ${this.gridHeight}\nstatic unsigned char ${adjustedImageName}_bits[] = {\n`;
+            }
+            xbmContent += encodedArray.map(value => '0x' + value.toString(16).padStart(2, '0')).toString();
+            xbmContent += '\n};';
+            return xbmContent;
+        }
     },
 };
 </script>
