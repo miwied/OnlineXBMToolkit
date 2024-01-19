@@ -107,7 +107,7 @@
         </div>
     </v-card>
 
-    <v-snackbar v-model="snackbar.visible" :timeout="3000" :color="snackbar.color">
+    <v-snackbar v-model="snackbar.visible" :timeout="snackbar.timeout" :color="snackbar.color">
         {{ snackbar.text }}
         <template v-slot:actions>
             <v-btn color="black" variant="text" @click="snackbar.visible = false">
@@ -127,6 +127,7 @@ import xbmConverter from '@/components/xbmTools/xbmConverter.vue'
 
 // adjustable default size for the image & grid
 const defaultSize = 24;
+const maxGridSize = 200;
 
 export default {
     components: {
@@ -151,6 +152,7 @@ export default {
                 visible: false,
                 text: '',
                 color: '',
+                timeout: 3000,
             },
         };
     },
@@ -180,18 +182,33 @@ export default {
             }
         },
         gridHeight: function (newVal, oldVal) {
+            if (newVal < 1) {
+                this.gridHeight = 1;
+            }
             if (this.gridSizeIsEqual && this.gridWidth !== this.gridHeight) {
                 this.gridWidth = this.gridHeight;
+            }
+            if (newVal > maxGridSize) {
+                this.triggerSnackbar('Please be aware that grid sizes that are too large have not been taken into account in this application. The visualization may suffer as a result.', 'yellow-lighten-1', 12000);
             }
             this.convertToXbm();
         },
         gridWidth: function (newVal, oldVal) {
+            if (newVal < 1) {
+                this.gridWidth = 1;
+            }
             if (this.gridSizeIsEqual && this.gridWidth !== this.gridHeight) {
                 this.gridHeight = this.gridWidth;
+            }
+            if (newVal > maxGridSize) {
+                this.triggerSnackbar('Please be aware that grid sizes that are too large have not been taken into account in this application. The visualization may suffer as a result.', 'yellow-lighten-1', 12000);
             }
             this.convertToXbm();
         },
         imageHeight: function (newVal, oldVal) {
+            if (newVal < 1) {
+                this.imageHeight = 1;
+            }
             if (this.imageSizeIsEqual && this.imageWidth !== this.imageHeight) {
                 this.imageWidth = this.imageHeight;
             }
@@ -201,6 +218,9 @@ export default {
             this.convertToXbm();
         },
         imageWidth: function (newVal, oldVal) {
+            if (newVal < 1) {
+                this.imageWidth = 1;
+            }
             if (this.imageSizeIsEqual && this.imageWidth !== this.imageHeight) {
                 this.imageHeight = this.imageWidth;
             }
@@ -211,9 +231,10 @@ export default {
         },
     },
     methods: {
-        triggerSnackbar(message, color) {
+        triggerSnackbar(message, color, timeout = 3000) {
             this.snackbar.text = message;
             this.snackbar.color = color;
+            this.snackbar.timeout = timeout;
             this.snackbar.visible = true;
         },
         updateArray(array) {
