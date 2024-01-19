@@ -71,10 +71,10 @@
                     <p class="text-h6">&nbsp;Output</p>
                 </div>
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
-                <v-btn @click="copyOutputArray" prepend-icon="mdi-content-copy"> Copy array </v-btn>
+                <v-btn @click="copyOutputArrayString" prepend-icon="mdi-content-copy"> Copy array </v-btn>
 
-                <v-textarea class="pa-0" label="Formatted array:" v-model="outputArray" style="font-family: monospace;"
-                    readonly rows="8"></v-textarea>
+                <v-textarea class="pa-0" label="Formatted array:" v-model="outputArrayString"
+                    style="font-family: monospace;" readonly rows="8"></v-textarea>
             </v-card>
         </div>
     </div>
@@ -137,7 +137,7 @@ export default {
     data() {
         return {
             xbmArray: [],
-            outputArray: '',
+            outputArrayString: '',
             originalImage: null,
             imageName: null,
             gridHeight: defaultSize,
@@ -218,7 +218,7 @@ export default {
         },
         updateArray(array) {
             this.xbmArray = array;
-            this.outputArray = this.$refs.xbmConverter.convertXbmArrayToXbmString(array, this.imageName);
+            this.outputArrayString = this.$refs.xbmConverter.convertXbmArrayToXbmString(array, this.imageName);
         },
         reset() {
             this.resetImageData();
@@ -250,7 +250,7 @@ export default {
             this.$refs.fileInput.click();
         },
         handleDownload() {
-            if (this.outputArray === '') {
+            if (this.outputArrayString === '') {
                 return;
             }
             const regex = /\.\w+$/;
@@ -258,7 +258,7 @@ export default {
             // remove file extensions
             adjustedImageName = adjustedImageName.replace(regex, '');
 
-            const blob = new Blob([this.outputArray], { type: 'text/plain' });
+            const blob = new Blob([this.outputArrayString], { type: 'text/plain' });
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
@@ -268,9 +268,9 @@ export default {
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
         },
-        async copyOutputArray() {
+        async copyOutputArrayString() {
             try {
-                await navigator.clipboard.writeText(this.outputArray);
+                await navigator.clipboard.writeText(this.outputArrayString);
                 this.triggerSnackbar("Array copied successfully.", 'green-lighten-2')
             } catch (err) {
                 this.triggerSnackbar("Array could be not copied.", 'deep-orange-lighten-2')
