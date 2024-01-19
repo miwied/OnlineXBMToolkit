@@ -105,6 +105,15 @@
         </div>
     </v-card>
 
+    <v-snackbar v-model="snackbar.visible" :timeout="timeout" color="yellow-lighten-1">
+        {{ snackbar.text }}
+        <template v-slot:actions>
+            <v-btn color="black" variant="text" @click="snackbar.visible = false">
+                <v-icon>{{ "mdi-close" }}</v-icon>
+            </v-btn>
+        </template>
+    </v-snackbar>
+
     <xbmConverter ref="xbmConverter" :image="originalImage" :gridWidth="gridWidth" :gridHeight="gridHeight"
         :imageWidth="imageWidth" :imageHeight="imageHeight" @xbm-array-converted="onConvertedXbmArray" />
 </template>
@@ -113,6 +122,9 @@
 import xbmViewer from '@/components/xbmTools/xbmViewer.vue'
 import xbmEditor from '@/components/xbmTools/xbmEditor.vue'
 import xbmConverter from '@/components/xbmTools/xbmConverter.vue'
+
+// adjustable default size for the image & grid
+const defaultSize = 24;
 
 export default {
     components: {
@@ -125,13 +137,17 @@ export default {
             xbmArray: [],
             originalImage: null,
             imageName: null,
-            gridHeight: 24,
-            gridWidth: 24,
-            imageHeight: 24,
-            imageWidth: 24,
+            gridHeight: defaultSize,
+            gridWidth: defaultSize,
+            imageHeight: defaultSize,
+            imageWidth: defaultSize,
             gridSizeIsEqual: true,
             imageSizeIsEqual: true,
             isEditMode: true,
+            snackbar: {
+                visible: false,
+                text: '',
+            },
         };
     },
     computed: {
@@ -175,16 +191,26 @@ export default {
             if (this.imageSizeIsEqual && this.imageWidth !== this.imageHeight) {
                 this.imageWidth = this.imageHeight;
             }
+            if ((this.originalImage === null || this.originalImage === undefined) && newVal !== defaultSize) {
+                this.triggerSnackbar('Please upload an image to view the updated size dimensions.');
+            }
             this.convertToXbm();
         },
         imageWidth: function (newVal, oldVal) {
             if (this.imageSizeIsEqual && this.imageWidth !== this.imageHeight) {
                 this.imageHeight = this.imageWidth;
             }
+            if ((this.originalImage === null || this.originalImage === undefined) && newVal !== defaultSize) {
+                this.triggerSnackbar('Please upload an image to view the updated size dimensions.');
+            }
             this.convertToXbm();
         },
     },
     methods: {
+        triggerSnackbar(message) {
+            this.snackbar.text = message;
+            this.snackbar.visible = true;
+        },
         updateArray(array) {
             this.xbmArray = array;
         },
@@ -285,11 +311,11 @@ export default {
         },
         resetImageSize() {
             this.imageSizeIsEqual = true;
-            this.imageHeight = 24;
+            this.imageHeight = defaultSize;
         },
         resetGridSize() {
             this.gridSizeIsEqual = true;
-            this.gridHeight = 24;
+            this.gridHeight = defaultSize;
         },
     }
 }
