@@ -17,7 +17,7 @@
 
 .miwied-logo {
     width: auto;
-    height: 90%;
+    height: 80%;
     pointer-events: none;
 }
 
