@@ -23,9 +23,14 @@
                             <v-btn @click="increaseSize('imageHeight')" style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
-                    <v-btn @click="imageSizeIsEqual = !imageSizeIsEqual">
-                        <v-icon>{{ toggleImageSizeIcon }}</v-icon>
-                    </v-btn>
+                    <div>
+                        <v-btn @click="imageSizeIsEqual = !imageSizeIsEqual">
+                            <v-icon>{{ toggleImageSizeIcon }}</v-icon>
+                        </v-btn>
+                        <v-btn @click="resetImageSize" class="mt-1">
+                            <v-icon>{{ "mdi-restart" }}</v-icon>
+                        </v-btn>
+                    </div>
                     <div class="size-input">
                         <v-text-field label="Image-witdh" v-model="imageWidth" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
@@ -42,9 +47,14 @@
                             <v-btn @click="increaseSize('gridHeight')" style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
-                    <v-btn @click="gridSizeIsEqual = !gridSizeIsEqual">
-                        <v-icon>{{ toggleGridSizeIcon }}</v-icon>
-                    </v-btn>
+                    <div>
+                        <v-btn @click="gridSizeIsEqual = !gridSizeIsEqual">
+                            <v-icon>{{ toggleGridSizeIcon }}</v-icon>
+                        </v-btn>
+                        <v-btn @click="resetGridSize" class="mt-1">
+                            <v-icon>{{ "mdi-restart" }}</v-icon>
+                        </v-btn>
+                    </div>
                     <div class="size-input">
                         <v-text-field label="Grid-witdh" v-model="gridWidth" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
@@ -76,11 +86,11 @@
             <xbmEditor ref="xbmEditor" :xbmArray="xbmArray" :gridWidth="gridWidth" :gridHeight="gridHeight"
                 @update-array="updateArray" />
             <div class="editor-buttons">
-                <v-btn @click="rotateLeft" icon="mdi-rotate-left"></v-btn>
                 <v-btn @click="shiftLeft" icon="mdi-chevron-left"></v-btn>
                 <v-btn @click="shiftRight" icon="mdi-chevron-right"></v-btn>
                 <v-btn @click="shiftUp" icon="mdi-chevron-up"></v-btn>
                 <v-btn @click="shiftDown" icon="mdi-chevron-down"></v-btn>
+                <v-btn @click="rotateLeft" icon="mdi-rotate-left"></v-btn>
                 <v-btn @click="rotateRight" icon="mdi-rotate-right"></v-btn>
             </div>
             <div class="editor-buttons">
@@ -176,6 +186,7 @@ export default {
     },
     methods: {
         updateArray(array) {
+            console.log("updating array");
             this.xbmArray = array;
         },
         handleFileChange(event) {
@@ -183,7 +194,6 @@ export default {
 
             if (file) {
                 this.imageName = file.name;
-                console.log(this.imageName);
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     this.originalImage = e.target.result;
@@ -219,10 +229,8 @@ export default {
             this.resetImageData();
             this.xbmArray = [];
             this.isEditMode = true;
-            this.gridSizeIsEqual = true;
-            this.imageSizeIsEqual = true;
-            this.gridHeight = 24;
-            this.imageHeight = 24;
+            this.resetImageSize();
+            this.resetGridSize();
             this.$refs.xbmEditor.clearAll();
         },
         undo() {
@@ -275,6 +283,14 @@ export default {
             this.imageName = null;
             this.originalImage = null;
             this.$refs.fileInput.value = null;
+        },
+        resetImageSize() {
+            this.imageSizeIsEqual = true;
+            this.imageHeight = 24;
+        },
+        resetGridSize() {
+            this.gridSizeIsEqual = true;
+            this.gridHeight = 24;
         },
     }
 }
@@ -343,6 +359,7 @@ export default {
 
 .editor-buttons {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .editor-buttons>* {
