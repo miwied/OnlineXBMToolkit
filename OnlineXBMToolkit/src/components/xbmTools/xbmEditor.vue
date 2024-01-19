@@ -1,7 +1,7 @@
 <template>
     <div v-for="(row, rowIndex) in pixels" :key="rowIndex" class="pixel-row">
         <div v-for="(pixel, colIndex) in row" :key="colIndex" class="pixel"
-            :style="{ backgroundColor: pixel ? 'white' : 'black' }" @click="togglePixel(rowIndex, colIndex)"
+            :style="{ backgroundColor: pixel ? 'white' : 'black' }" @click="toggleSinglePixel(rowIndex, colIndex)"
             @mousedown="startPainting(rowIndex, colIndex)" @mouseup="stopPainting"
             @mousemove="paintPixel(rowIndex, colIndex)">
         </div>
@@ -43,6 +43,7 @@ export default {
             pixels: [],
             initialColor: 1,
             isPainting: false,
+            paintedPixelsCount: 0,
         };
     },
     mounted() {
@@ -90,24 +91,29 @@ export default {
             this.$emit("update-array", encodedArray);
             return encodedArray;
         },
-        togglePixel(rowIndex, colIndex) {
+        toggleSinglePixel(rowIndex, colIndex) {
             if (!this.isPainting) {
                 this.pixels[rowIndex][colIndex] = !this.pixels[rowIndex][colIndex];
+                this.encode();
             }
-            this.encode();
         },
         startPainting(rowIndex, colIndex) {
             this.isPainting = true;
             this.initialColor = this.pixels[rowIndex][colIndex];
+            this.paintedPixelsCount = 0;
             this.paintPixel(rowIndex, colIndex);
         },
         stopPainting() {
+            if (this.isPainting && this.paintedPixelsCount > 1) {
+                this.encode();
+            }
+            this.paintedPixelsCount = 0;
             this.isPainting = false;
-            this.encode();
         },
         paintPixel(rowIndex, colIndex) {
             if (this.isPainting) {
                 this.pixels[rowIndex][colIndex] = this.initialColor;
+                this.paintedPixelsCount++;
             }
         },
         handleXbmArrayChange() {
