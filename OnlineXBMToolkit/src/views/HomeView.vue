@@ -105,7 +105,7 @@
         </div>
     </v-card>
 
-    <v-snackbar v-model="snackbar.visible" :timeout="timeout" color="yellow-lighten-1">
+    <v-snackbar v-model="snackbar.visible" :timeout="2000" color="yellow-lighten-1">
         {{ snackbar.text }}
         <template v-slot:actions>
             <v-btn color="black" variant="text" @click="snackbar.visible = false">

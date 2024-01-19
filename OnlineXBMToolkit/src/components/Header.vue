@@ -1,12 +1,12 @@
 <template>
-    <nav>
+    <div class="header">
         <img class="miwied-logo" src="../assets/miwied_logo.svg" alt="miwied logo" />
-        <div class="nav-text">OnlineXBMToolkit</div>
-    </nav>
+        <div class="header-text">OnlineXBMToolkit</div>
+    </div>
 </template>
 
 <style scoped>
-nav {
+.header {
     height: 2.7rem;
     padding: 0.1rem 0.25rem 0.1rem;
     display: flex;
@@ -21,7 +21,7 @@ nav {
     pointer-events: none;
 }
 
-.nav-text {
+.header-text {
     font-size: 150%;
     margin-left: 0.45rem;
     color: #FFFFFF;
