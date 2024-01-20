@@ -1,7 +1,7 @@
 <template>
     <div class="footer">
         <p>miwied • 2024</p>
-        <v-btn icon href="https://github.com/miwied" target="_blank" variant="plain">
+        <v-btn icon href="https://github.com/miwied/OnlineXBMToolkit" target="_blank" variant="plain">
             <v-icon>mdi-github</v-icon>
         </v-btn>
     </div>
