@@ -141,7 +141,6 @@ export default {
     data() {
         return {
             xbmArray: [],
-            outputArrayString: '',
             originalImage: null,
             imageName: null,
             gridHeight: defaultSize,
@@ -244,10 +243,10 @@ export default {
             this.xbmArray = array;
         },
         updateWidth(width) {
-            this.gridWidth = width;
+            this.gridWidth = parseInt(width);
         },
         updateHeight(height) {
-            this.gridHeight = height;
+            this.gridHeight = parseInt(height);
         },
         reset() {
             this.resetImageData();
@@ -286,15 +285,12 @@ export default {
             this.$refs.fileInput.click();
         },
         handleDownload() {
-            if (this.outputArrayString === '') {
-                return;
-            }
             const regex = /\.\w+$/;
             let adjustedImageName = (str => str ? str : 'image')(this.imageName);
             // remove file extensions
             adjustedImageName = adjustedImageName.replace(regex, '');
 
-            const blob = new Blob([this.outputArrayString], { type: 'text/plain' });
+            const blob = new Blob([this.$refs.xbmStringFormatter.getFormattedString()], { type: 'text/plain' });
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
@@ -306,7 +302,7 @@ export default {
         },
         async copyOutputArrayString() {
             try {
-                await navigator.clipboard.writeText(this.outputArrayString);
+                await navigator.clipboard.writeText(this.$refs.xbmStringFormatter.getFormattedString());
                 this.triggerSnackbar("Array copied successfully.", 'green-lighten-2')
             } catch (err) {
                 this.triggerSnackbar("Array could be not copied.", 'deep-orange-lighten-2')

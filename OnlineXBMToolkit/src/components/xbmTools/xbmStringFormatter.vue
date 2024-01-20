@@ -93,7 +93,7 @@ export default {
     },
     methods: {
         xbmArrayToString(xbmArray) {
-            return this.xbmArray.map(value => '0x' + value.toString(16).padStart(2, '0')).toString();
+            return xbmArray.map(value => '0x' + value.toString(16).padStart(2, '0')).toString();
         },
         xbmStringToArray(xbmString) {
             let hexValues = xbmString.split(',');
@@ -109,9 +109,18 @@ export default {
                     return false;
                 }
             }
-
             return true;
         },
+        splitBytes(inputString) {
+            const bytesArray = inputString.split(',');
+
+            const regex = /.{1,47}(,|$)/g;
+            const matchedGroups = bytesArray.join(',').match(regex);
+            return matchedGroups.join('\n');
+        },
+        getFormattedString() {
+            return `#define image_width ${this.gridWidth}\n#define image_height ${this.gridHeight}\nstatic unsigned char image_bits[] = {\n${this.splitBytes(this.modifiableArray)} \n};`
+        }
     },
 };
 </script>
