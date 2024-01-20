@@ -74,7 +74,7 @@
                 <v-btn @click="copyOutputArrayString" prepend-icon="mdi-content-copy"> Copy array </v-btn>
 
                 <xbmStringFormatter ref="xbmStringFormatter" :xbmArray="xbmArray" :gridWidth="gridWidth"
-                    :gridHeight="gridHeight" :imageName="imageName" />
+                    :gridHeight="gridHeight" :imageName="imageName" @update-array="updateArray" />
             </v-card>
         </div>
     </div>
