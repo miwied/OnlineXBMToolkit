@@ -2,7 +2,7 @@
 This web-based tool was designed for editing and converting images into the XBM (X BitMap) format. I developed it with [Vue.js](https://vuejs.org/) and the [Vuetify component framework](https://vuetifyjs.com/) for a private project and now I wanted to outsource it as a standalone app. It has many bundled features compared to other xbm-editors.
 
 # Demo
-You are welcome to test and use the tool yourself under the [following link]().
+You are welcome to test and use the tool yourself under the [following link](https://miwied.github.io/OnlineXBMToolkit/).
 
 # Features:
 
