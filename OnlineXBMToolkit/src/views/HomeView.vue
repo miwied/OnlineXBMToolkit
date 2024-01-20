@@ -71,7 +71,12 @@
                     <p class="text-h6">&nbsp;Output</p>
                 </div>
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
-                <v-btn @click="copyOutputArrayString" prepend-icon="mdi-content-copy"> Copy array </v-btn>
+
+                <div class="copy-buttons">
+                    <v-btn @click="copyCCode" prepend-icon="mdi-content-copy"> Copy C-code </v-btn>
+                    <v-btn @click="copyCBytes" prepend-icon="mdi-content-copy"> Copy c-bytes </v-btn>
+                    <v-btn @click="copyJsBytes" prepend-icon="mdi-content-copy"> Copy js-bytes </v-btn>
+                </div>
 
                 <xbmStringFormatter ref="xbmStringFormatter" :xbmArray="xbmArray" :gridWidth="gridWidth"
                     :gridHeight="gridHeight" :imageName="imageName" @update-array="updateArray" @update-width="updateWidth"
@@ -208,7 +213,10 @@ export default {
             this.convertToXbm();
         },
         imageHeight: function (newVal, oldVal) {
-            if (newVal < 1) {
+            if (parseInt(newVal) > 0) {
+                this.imageHeight = parseInt(newVal);
+            }
+            else {
                 this.imageHeight = 1;
             }
             if (this.imageSizeIsEqual && this.imageWidth !== this.imageHeight) {
@@ -217,10 +225,19 @@ export default {
             if ((this.originalImage === null || this.originalImage === undefined) && newVal !== defaultSize) {
                 this.triggerSnackbar('Please upload an image to view the updated size dimensions.', 'yellow-lighten-1');
             }
+            if (parseInt(newVal) > 0) {
+                this.imageHeight = parseInt(newVal);
+            }
+            else {
+
+            }
             this.convertToXbm();
         },
         imageWidth: function (newVal, oldVal) {
-            if (newVal < 1) {
+            if (parseInt(newVal) > 0) {
+                this.imageWidth = parseInt(newVal);
+            }
+            else {
                 this.imageWidth = 1;
             }
             if (this.imageSizeIsEqual && this.imageWidth !== this.imageHeight) {
@@ -290,7 +307,7 @@ export default {
             // remove file extensions
             adjustedImageName = adjustedImageName.replace(regex, '');
 
-            const blob = new Blob([this.$refs.xbmStringFormatter.getFormattedString()], { type: 'text/plain' });
+            const blob = new Blob([this.$refs.xbmStringFormatter.getCCode()], { type: 'text/plain' });
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
@@ -300,10 +317,26 @@ export default {
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
         },
-        async copyOutputArrayString() {
+        async copyCCode() {
             try {
-                await navigator.clipboard.writeText(this.$refs.xbmStringFormatter.getFormattedString());
-                this.triggerSnackbar("Array copied successfully.", 'green-lighten-2')
+                await navigator.clipboard.writeText(this.$refs.xbmStringFormatter.getCCode());
+                this.triggerSnackbar("C-Code copied successfully.", 'green-lighten-2')
+            } catch (err) {
+                this.triggerSnackbar("Array could be not copied.", 'deep-orange-lighten-2')
+            }
+        },
+        async copyCBytes() {
+            try {
+                await navigator.clipboard.writeText(this.$refs.xbmStringFormatter.getCArray());
+                this.triggerSnackbar("C-Array copied successfully.", 'green-lighten-2')
+            } catch (err) {
+                this.triggerSnackbar("Array could be not copied.", 'deep-orange-lighten-2')
+            }
+        },
+        async copyJsBytes() {
+            try {
+                await navigator.clipboard.writeText(this.$refs.xbmStringFormatter.getJsArray());
+                this.triggerSnackbar("JS-Array copied successfully.", 'green-lighten-2')
             } catch (err) {
                 this.triggerSnackbar("Array could be not copied.", 'deep-orange-lighten-2')
             }
@@ -450,6 +483,25 @@ export default {
 .editor-buttons {
     display: flex;
     justify-content: center;
+}
+
+.copy-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.copy-buttons>* {
+    flex-grow: 1;
+    margin: 0.25rem;
+    width: calc(33.33% - 0.5rem);
+}
+
+@media (max-width: 950px) {
+    .copy-buttons>* {
+        width: 100%;
+        /* full width on small screens */
+    }
 }
 
 .card-container {

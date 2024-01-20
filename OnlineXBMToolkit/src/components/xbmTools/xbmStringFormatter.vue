@@ -118,8 +118,31 @@ export default {
             const matchedGroups = bytesArray.join(',').match(regex);
             return matchedGroups.join('\n');
         },
-        getFormattedString() {
+        convertHexStringToJsArrayString(hexString) {
+            const hexArray = hexString.split(',');
+
+            // surround each hex value with apostrophes
+            const apostrophedHex = hexArray.map(hex => `'${hex}'`);
+
+            let formattedString = '';
+
+            for (let i = 0; i < apostrophedHex.length; i += 9) {
+                const isLastChunk = i + 9 >= apostrophedHex.length;
+                const chunkString = apostrophedHex.slice(i, i + 9).join(',');
+                formattedString += chunkString + (isLastChunk ? '' : ',') + '\n';
+            }
+
+            return formattedString;
+        },
+
+        getCCode() {
             return `#define image_width ${this.gridWidth}\n#define image_height ${this.gridHeight}\nstatic unsigned char image_bits[] = {\n${this.splitBytes(this.modifiableArray)} \n};`
+        },
+        getCArray() {
+            return this.splitBytes(this.modifiableArray).toString();
+        },
+        getJsArray() {
+            return this.convertHexStringToJsArrayString(this.modifiableArray).toString();
         }
     },
 };
