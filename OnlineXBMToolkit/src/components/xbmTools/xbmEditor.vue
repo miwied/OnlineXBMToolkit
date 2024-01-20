@@ -33,9 +33,11 @@ export default {
         },
         gridWidth: function (newVal, oldVal) {
             this.decode();
+            this.encode();
         },
         gridHeight: function (newVal, oldVal) {
             this.decode();
+            this.encode();
         },
     },
     data() {

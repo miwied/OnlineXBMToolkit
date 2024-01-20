@@ -5,14 +5,14 @@
                 #define {{ displayedImageName }}_width
             </p>
             <v-text-field class="ml-2 writable" variant="plain" hide-details density
-                :value="modifiableWidth"></v-text-field>
+                v-model="modifiableWidth"></v-text-field>
         </div>
         <div class="sizeInputs">
             <p class="readonly">
                 #define {{ displayedImageName }}_height
             </p>
             <v-text-field class="ml-2 writable" variant="plain" hide-details density
-                :value="modifiableHeight"></v-text-field>
+                v-model="modifiableHeight"></v-text-field>
         </div>
         <p class="readonly">
             static unsigned char {{ displayedImageName }}_bits[] = {
@@ -44,12 +44,11 @@ export default {
             required: true,
         },
     },
-    emits: ['update-array'],
+    emits: ['update-array', 'update-width', 'update-height'],
     watch: {
         xbmArray: function (newVal, oldVal) {
             let arrayString = this.xbmArrayToString(newVal);
             if (!this.xbmStringsAreEqual(this.modifiableArray, arrayString)) {
-                console.log("test");
                 this.modifiableArray = arrayString;
             }
         },
@@ -57,10 +56,20 @@ export default {
             this.$emit("update-array", this.xbmStringToArray(this.modifiableArray));
         },
         gridWidth: function (newVal, oldVal) {
-            this.modifiableWidth = newVal;
+            if (this.modifiableWidth != newVal) {
+                this.modifiableWidth = newVal;
+            }
+        },
+        modifiableWidth: function (newVal, oldVal) {
+            this.$emit("update-width", this.modifiableWidth);
         },
         gridHeight: function (newVal, oldVal) {
-            this.modifiableHeight = newVal;
+            if (this.modifiableHeight != newVal) {
+                this.modifiableHeight = newVal;
+            }
+        },
+        modifiableHeight: function (newVal, oldVal) {
+            this.$emit("update-height", this.modifiableHeight);
         },
         imageName: function (newVal, oldVal) {
             const regex = /\.\w+$/;
@@ -78,8 +87,8 @@ export default {
         };
     },
     mounted() {
-        this.modifiableWidth = this.gridWidth;
-        this.modifiableHeight = this.gridHeight;
+        this.modifiableWidth = this.gridWidth.toString();
+        this.modifiableHeight = this.gridHeight.toString();
         this.modifiableArray = this.xbmArrayToString(this.xbmArray);
     },
     methods: {
@@ -102,7 +111,7 @@ export default {
             }
 
             return true;
-        }
+        },
     },
 };
 </script>

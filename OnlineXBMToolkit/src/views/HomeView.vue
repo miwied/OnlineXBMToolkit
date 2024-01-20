@@ -74,7 +74,8 @@
                 <v-btn @click="copyOutputArrayString" prepend-icon="mdi-content-copy"> Copy array </v-btn>
 
                 <xbmStringFormatter ref="xbmStringFormatter" :xbmArray="xbmArray" :gridWidth="gridWidth"
-                    :gridHeight="gridHeight" :imageName="imageName" @update-array="updateArray" />
+                    :gridHeight="gridHeight" :imageName="imageName" @update-array="updateArray" @update-width="updateWidth"
+                    @update-height="updateHeight" />
             </v-card>
         </div>
     </div>
@@ -241,6 +242,12 @@ export default {
         },
         updateArray(array) {
             this.xbmArray = array;
+        },
+        updateWidth(width) {
+            this.gridWidth = width;
+        },
+        updateHeight(height) {
+            this.gridHeight = height;
         },
         reset() {
             this.resetImageData();
