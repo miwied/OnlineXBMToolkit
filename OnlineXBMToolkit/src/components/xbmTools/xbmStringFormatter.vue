@@ -47,7 +47,14 @@ export default {
     emits: ['update-array'],
     watch: {
         xbmArray: function (newVal, oldVal) {
-            this.modifiableArray = this.xbmArrayToString(this.xbmArray);
+            let arrayString = this.xbmArrayToString(newVal);
+            if (!this.xbmStringsAreEqual(this.modifiableArray, arrayString)) {
+                console.log("test");
+                this.modifiableArray = arrayString;
+            }
+        },
+        modifiableArray: function (newVal, oldVal) {
+            this.$emit("update-array", this.xbmStringToArray(this.modifiableArray));
         },
         gridWidth: function (newVal, oldVal) {
             this.modifiableWidth = newVal;
@@ -79,6 +86,23 @@ export default {
         xbmArrayToString(xbmArray) {
             return this.xbmArray.map(value => '0x' + value.toString(16).padStart(2, '0')).toString();
         },
+        xbmStringToArray(xbmString) {
+            let hexValues = xbmString.split(',');
+            return hexValues.map(hexValue => parseInt(hexValue.trim(), 16));
+        },
+        xbmStringsAreEqual(xbmString1, xbmString2) {
+            if (xbmString1.length !== xbmString2.length) {
+                return false;
+            }
+
+            for (let i = 0; i < xbmString1.length; i++) {
+                if (xbmString1[i] !== xbmString2[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     },
 };
 </script>
