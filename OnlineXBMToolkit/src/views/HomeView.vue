@@ -17,10 +17,10 @@
 
                 <div class="size-inputs">
                     <div class="size-input">
-                        <v-text-field label="Image-height" v-model="imageHeight" suffix="px" hide-details></v-text-field>
+                        <v-text-field label="Image-witdh" v-model="imageWidth" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn @click="decreaseSize('imageHeight')" style="font-size: 25px;">−</v-btn>
-                            <v-btn @click="increaseSize('imageHeight')" style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('imageWidth')" style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('imageWidth')" style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                     <div>
@@ -32,19 +32,19 @@
                         </v-btn>
                     </div>
                     <div class="size-input">
-                        <v-text-field label="Image-witdh" v-model="imageWidth" suffix="px" hide-details></v-text-field>
+                        <v-text-field label="Image-height" v-model="imageHeight" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn @click="decreaseSize('imageWidth')" style="font-size: 25px;">−</v-btn>
-                            <v-btn @click="increaseSize('imageWidth')" style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('imageHeight')" style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('imageHeight')" style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                 </div>
                 <div class="size-inputs">
                     <div class="size-input">
-                        <v-text-field label="Grid-height" v-model="gridHeight" suffix="px" hide-details></v-text-field>
+                        <v-text-field label="Grid-witdh" v-model="gridWidth" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn @click="decreaseSize('gridHeight')" style="font-size: 25px;">−</v-btn>
-                            <v-btn @click="increaseSize('gridHeight')" style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('gridWidth')" style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('gridWidth')" style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                     <div>
@@ -56,10 +56,10 @@
                         </v-btn>
                     </div>
                     <div class="size-input">
-                        <v-text-field label="Grid-witdh" v-model="gridWidth" suffix="px" hide-details></v-text-field>
+                        <v-text-field label="Grid-height" v-model="gridHeight" suffix="px" hide-details></v-text-field>
                         <div class="size-buttons">
-                            <v-btn @click="decreaseSize('gridWidth')" style="font-size: 25px;">−</v-btn>
-                            <v-btn @click="increaseSize('gridWidth')" style="font-size: 25px;">+</v-btn>
+                            <v-btn @click="decreaseSize('gridHeight')" style="font-size: 25px;">−</v-btn>
+                            <v-btn @click="increaseSize('gridHeight')" style="font-size: 25px;">+</v-btn>
                         </div>
                     </div>
                 </div>
@@ -73,8 +73,8 @@
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
                 <v-btn @click="copyOutputArrayString" prepend-icon="mdi-content-copy"> Copy array </v-btn>
 
-                <v-textarea class="pa-0" label="Formatted array:" v-model="outputArrayString"
-                    style="font-family: monospace;" readonly rows="8"></v-textarea>
+                <xbmStringFormatter ref="xbmStringFormatter" :xbmArray="xbmArray" :gridWidth="gridWidth"
+                    :gridHeight="gridHeight" :imageName="imageName" />
             </v-card>
         </div>
     </div>
@@ -124,6 +124,7 @@
 import xbmViewer from '@/components/xbmTools/xbmViewer.vue'
 import xbmEditor from '@/components/xbmTools/xbmEditor.vue'
 import xbmConverter from '@/components/xbmTools/xbmConverter.vue'
+import xbmStringFormatter from '@/components/xbmTools/xbmStringFormatter.vue'
 
 // adjustable default size for the image & grid
 const defaultSize = 24;
@@ -133,7 +134,8 @@ export default {
     components: {
         xbmViewer,
         xbmEditor,
-        xbmConverter
+        xbmConverter,
+        xbmStringFormatter
     },
     data() {
         return {
@@ -239,7 +241,6 @@ export default {
         },
         updateArray(array) {
             this.xbmArray = array;
-            this.outputArrayString = this.$refs.xbmConverter.convertXbmArrayToXbmString(array, this.imageName);
         },
         reset() {
             this.resetImageData();
