@@ -136,7 +136,7 @@ export default {
         },
 
         getCCode() {
-            return `#define image_width ${this.gridWidth}\n#define image_height ${this.gridHeight}\nstatic unsigned char image_bits[] = {\n${this.splitBytes(this.modifiableArray)} \n};`
+            return `#define ${this.displayedImageName}_width ${this.gridWidth}\n#define ${this.displayedImageName}_height ${this.gridHeight}\nstatic unsigned char ${this.displayedImageName}_bits[] = {\n${this.splitBytes(this.modifiableArray)} \n};`
         },
         getCArray() {
             return this.splitBytes(this.modifiableArray).toString();

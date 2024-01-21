@@ -114,7 +114,9 @@
     </v-card>
 
     <v-snackbar v-model="snackbar.visible" :timeout="snackbar.timeout" :color="snackbar.color">
-        {{ snackbar.text }}
+        {{ snackbar.upperText }}
+        <br />
+        {{ snackbar.lowerText }}
         <template v-slot:actions>
             <v-btn color="black" variant="text" @click="snackbar.visible = false">
                 <v-icon>{{ "mdi-close" }}</v-icon>
@@ -157,7 +159,8 @@ export default {
             isEditMode: true,
             snackbar: {
                 visible: false,
-                text: '',
+                upperText: '',
+                lowerText: '',
                 color: '',
                 timeout: 3000,
             },
@@ -250,8 +253,9 @@ export default {
         },
     },
     methods: {
-        triggerSnackbar(message, color, timeout = 3000) {
-            this.snackbar.text = message;
+        triggerSnackbar(upperText, color, timeout = 3000, lowerText = '') {
+            this.snackbar.upperText = upperText;
+            this.snackbar.lowerText = lowerText;
             this.snackbar.color = color;
             this.snackbar.timeout = timeout;
             this.snackbar.visible = true;
@@ -319,26 +323,29 @@ export default {
         },
         async copyCCode() {
             try {
-                await navigator.clipboard.writeText(this.$refs.xbmStringFormatter.getCCode());
-                this.triggerSnackbar("C-Code copied successfully.", 'green-lighten-2')
+                let cCode = this.$refs.xbmStringFormatter.getCCode();
+                await navigator.clipboard.writeText(cCode);
+                this.triggerSnackbar('C-Code copied successfully:', 'green-lighten-2', 3000, cCode);
             } catch (err) {
-                this.triggerSnackbar("Array could be not copied.", 'deep-orange-lighten-2')
+                this.triggerSnackbar("Content could be not copied.", 'deep-orange-lighten-2');
             }
         },
         async copyCBytes() {
             try {
-                await navigator.clipboard.writeText(this.$refs.xbmStringFormatter.getCArray());
-                this.triggerSnackbar("C-Array copied successfully.", 'green-lighten-2')
+                let cArray = this.$refs.xbmStringFormatter.getCArray();
+                await navigator.clipboard.writeText(cArray);
+                this.triggerSnackbar('C-Bytes copied successfully:', 'green-lighten-2', 3000, cArray);
             } catch (err) {
-                this.triggerSnackbar("Array could be not copied.", 'deep-orange-lighten-2')
+                this.triggerSnackbar("Content could be not copied.", 'deep-orange-lighten-2');
             }
         },
         async copyJsBytes() {
             try {
-                await navigator.clipboard.writeText(this.$refs.xbmStringFormatter.getJsArray());
-                this.triggerSnackbar("JS-Array copied successfully.", 'green-lighten-2')
+                let jsArray = this.$refs.xbmStringFormatter.getJsArray();
+                await navigator.clipboard.writeText(jsArray);
+                this.triggerSnackbar("JS-Bytes copied successfully.", 'green-lighten-2', 3000, jsArray);
             } catch (err) {
-                this.triggerSnackbar("Array could be not copied.", 'deep-orange-lighten-2')
+                this.triggerSnackbar("Content could be not copied.", 'deep-orange-lighten-2');
             }
         },
         onConvertedXbmArray(array) {
