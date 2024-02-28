@@ -72,11 +72,25 @@
                 </div>
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
 
-                <div class="copy-buttons">
-                    <v-btn @click="copyCCode" prepend-icon="mdi-content-copy"> Copy C-code </v-btn>
-                    <v-btn @click="copyCBytes" prepend-icon="mdi-content-copy"> Copy c-bytes </v-btn>
-                    <v-btn @click="copyJsBytes" prepend-icon="mdi-content-copy"> Copy js-bytes </v-btn>
-                </div>
+                <v-row class="mb-2" style="display: flex; align-items: center; gap: 1rem;">
+                    <v-btn-toggle v-model="formatTypeSelected" color="deep-purple-lighten-1" mandatory="true"
+                        density="comfortable" group class="pa-0 ma-0">
+                        <v-btn :value="formatTypeSelectection[0]">
+                            {{ formatTypeSelectection[0] }}
+                        </v-btn>
+                        <v-btn :value="formatTypeSelectection[1]">
+                            {{ formatTypeSelectection[1] }}
+                        </v-btn>
+                        <v-btn :value="formatTypeSelectection[2]">
+                            {{ formatTypeSelectection[2] }}
+                        </v-btn>
+                        <v-btn :value="formatTypeSelectection[3]">
+                            {{ formatTypeSelectection[3] }}
+                        </v-btn>
+                    </v-btn-toggle>
+
+                    <v-btn @click="copy" prepend-icon="mdi-content-copy"> Copy </v-btn>
+                </v-row>
 
                 <xbmStringFormatter ref="xbmStringFormatter" :xbmArray="xbmArray" :gridWidth="gridWidth"
                     :gridHeight="gridHeight" :imageName="imageName" @update-array="updateArray" @update-width="updateWidth"
@@ -164,6 +178,8 @@ export default {
                 color: '',
                 timeout: 3000,
             },
+            formatTypeSelected: null,
+            formatTypeSelectection: ['C-Code', 'C-Bytes', 'JS-Bytes', 'JSON-Bytes']
         };
     },
     computed: {
