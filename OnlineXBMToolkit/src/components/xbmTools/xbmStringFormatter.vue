@@ -1,5 +1,6 @@
 <template>
-    <div style="font-family: monospace;">
+    <!-- c-code -->
+    <div style="font-family: monospace;" v-if="formatTypeSelected === formatTypeSelection[0]">
         <div class="sizeInputs">
             <p class="readonly">
                 #define {{ displayedImageName }}_width
@@ -17,9 +18,13 @@
         <p class="readonly">
             static unsigned char {{ displayedImageName }}_bits[] = {
         </p>
-        <v-textarea class="writable" v-model="modifiableArray" variant="plain" hide-details density hide-spin-buttons
-            no-resize rows="4"></v-textarea>
+        <v-textarea class="writable" v-model="modifiableText" hide-details density hide-spin-buttons
+            auto-grow="true"></v-textarea>
         <p class="readonly" style="margin-top: -4px;"> }; </p>
+    </div>
+    <div style="font-family: monospace;" v-else>
+        <v-textarea class="writable" v-model="modifiableText" hide-details density hide-spin-buttons no-resize rows="8.5"
+            spellcheck="false"></v-textarea>
     </div>
 </template>
 
@@ -43,17 +48,25 @@ export default {
             type: String,
             required: true,
         },
+        formatTypeSelected: {
+            type: String,
+            required: true
+        },
+        formatTypeSelection: {
+            type: Array,
+            required: true
+        },
     },
     emits: ['update-array', 'update-width', 'update-height'],
     watch: {
         xbmArray: function (newVal, oldVal) {
-            let arrayString = this.xbmArrayToString(newVal);
-            if (!this.xbmStringsAreEqual(this.modifiableArray, arrayString)) {
-                this.modifiableArray = arrayString;
-            }
+            this.updateString();
         },
-        modifiableArray: function (newVal, oldVal) {
-            this.$emit("update-array", this.xbmStringToArray(this.modifiableArray));
+        formatTypeSelected: function (newVal, oldVal) {
+            this.updateString();
+        },
+        modifiableText: function (newVal, oldVal) {
+            // this.$emit("update-array", this.xbmStringToArray(this.modifiableText));
         },
         gridWidth: function (newVal, oldVal) {
             if (this.modifiableWidth != newVal) {
@@ -83,66 +96,66 @@ export default {
             displayedImageName: defaultImageName,
             modifiableWidth: null,
             modifiableHeight: null,
-            modifiableArray: null,
+            modifiableText: null,
         };
     },
     mounted() {
-        this.modifiableWidth = this.gridWidth.toString();
-        this.modifiableHeight = this.gridHeight.toString();
-        this.modifiableArray = this.xbmArrayToString(this.xbmArray);
+        // this.modifiableWidth = this.gridWidth.toString();
+        // this.modifiableHeight = this.gridHeight.toString();
     },
     methods: {
-        xbmArrayToString(xbmArray) {
-            return xbmArray.map(value => '0x' + value.toString(16).padStart(2, '0')).toString();
-        },
-        xbmStringToArray(xbmString) {
-            let hexValues = xbmString.split(',');
-            return hexValues.map(hexValue => parseInt(hexValue.trim(), 16));
-        },
-        xbmStringsAreEqual(xbmString1, xbmString2) {
-            if (xbmString1.length !== xbmString2.length) {
-                return false;
+        updateString() {
+            switch (this.formatTypeSelected) {
+                // c-code
+                case this.formatTypeSelection[0]:
+                    this.modifiableText = this.getCArray();
+                    break;
+                // c-bytes
+                case this.formatTypeSelection[1]:
+                    this.modifiableText = this.getCArray();
+                    break;
+                // js-bytes
+                case this.formatTypeSelection[2]:
+                    console.log(this.xbmArray);
+                    this.modifiableText = this.getJsArray();
+                    break;
+                // json-bytes
+                case this.formatTypeSelection[3]:
+                    this.modifiableText = this.getCArray();
+                    break;
+                default:
+                    console.error("Format type selection error. Selected format", this.formatTypeSelected);
+                    break;
             }
-
-            for (let i = 0; i < xbmString1.length; i++) {
-                if (xbmString1[i] !== xbmString2[i]) {
-                    return false;
-                }
-            }
-            return true;
         },
         splitBytes(inputString) {
-            const bytesArray = inputString.split(',');
+            const bytesArray = inputString.toString().split(',');
 
             const regex = /.{1,47}(,|$)/g;
             const matchedGroups = bytesArray.join(',').match(regex);
             return matchedGroups.join('\n');
         },
-        convertHexStringToJsArrayString(hexString) {
-            const hexArray = hexString.split(',');
-
-            // surround each hex value with apostrophes
-            const apostrophedHex = hexArray.map(hex => `'${hex}'`);
-
-            let formattedString = '';
-
-            for (let i = 0; i < apostrophedHex.length; i += 9) {
-                const isLastChunk = i + 9 >= apostrophedHex.length;
-                const chunkString = apostrophedHex.slice(i, i + 9).join(',');
-                formattedString += chunkString + (isLastChunk ? '' : ',') + '\n';
-            }
-
-            return formattedString;
-        },
-
         getCCode() {
-            return `#define ${this.displayedImageName}_width ${this.gridWidth}\n#define ${this.displayedImageName}_height ${this.gridHeight}\nstatic unsigned char ${this.displayedImageName}_bits[] = {\n${this.splitBytes(this.modifiableArray)} \n};`
+            return `#define ${this.displayedImageName}_width ${this.gridWidth}\n#define ${this.displayedImageName}_height ${this.gridHeight}\nstatic unsigned char ${this.displayedImageName}_bits[] = {\n${this.splitBytes(this.xbmArray)} \n};`
         },
         getCArray() {
-            return this.splitBytes(this.modifiableArray).toString();
+            return this.xbmArray
+                .map((num, index) => {
+                    const hex = '0x' + num.toString(16).padStart(2, '0').toUpperCase();
+                    return (index % 9 === 8) ? hex + ",\n" : hex + ",";
+                })
+                .join('');
         },
         getJsArray() {
-            return this.convertHexStringToJsArrayString(this.modifiableArray).toString();
+            return this.xbmArray
+                .map((num, index) => {
+                    const hex = '0x' + num.toString(16).padStart(2, '0').toUpperCase();
+                    return (index % 9 === 8) ? hex + ",\n" : hex + ",";
+                })
+                .join('');
+        },
+        getJasonArray() {
+
         }
     },
 };

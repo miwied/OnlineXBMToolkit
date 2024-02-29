@@ -72,28 +72,30 @@
                 </div>
                 <v-btn @click="handleDownload" prepend-icon="mdi-download"> Download xbm file </v-btn>
 
-                <v-row class="mb-2" style="display: flex; align-items: center; gap: 1rem;">
+                <div class="ma-0 mt-2 pd-0"
+                    style="display: flex; flex-direction: row; align-items: start; justify-content: space-between; gap: 1rem;">
                     <v-btn-toggle v-model="formatTypeSelected" color="deep-purple-lighten-1" mandatory="true"
-                        density="comfortable" group class="pa-0 ma-0">
-                        <v-btn :value="formatTypeSelectection[0]">
-                            {{ formatTypeSelectection[0] }}
+                        density="comfortable" group class="pa-0 ma-0 d-flex flex-grow-1">
+                        <v-btn :value="formatTypeSelection[0]" class="flex-grow-1">
+                            {{ formatTypeSelection[0] }}
                         </v-btn>
-                        <v-btn :value="formatTypeSelectection[1]">
-                            {{ formatTypeSelectection[1] }}
+                        <v-btn :value="formatTypeSelection[1]" class="flex-grow-1">
+                            {{ formatTypeSelection[1] }}
                         </v-btn>
-                        <v-btn :value="formatTypeSelectection[2]">
-                            {{ formatTypeSelectection[2] }}
+                        <v-btn :value="formatTypeSelection[2]" class="flex-grow-1">
+                            {{ formatTypeSelection[2] }}
                         </v-btn>
-                        <v-btn :value="formatTypeSelectection[3]">
-                            {{ formatTypeSelectection[3] }}
+                        <v-btn :value="formatTypeSelection[3]" class="flex-grow-1">
+                            {{ formatTypeSelection[3] }}
                         </v-btn>
                     </v-btn-toggle>
 
                     <v-btn @click="copy" prepend-icon="mdi-content-copy"> Copy </v-btn>
-                </v-row>
+                </div>
 
                 <xbmStringFormatter ref="xbmStringFormatter" :xbmArray="xbmArray" :gridWidth="gridWidth"
-                    :gridHeight="gridHeight" :imageName="imageName" @update-array="updateArray" @update-width="updateWidth"
+                    :gridHeight="gridHeight" :imageName="imageName" :formatTypeSelected="formatTypeSelected"
+                    :formatTypeSelection="formatTypeSelection" @update-array="updateArray" @update-width="updateWidth"
                     @update-height="updateHeight" />
             </v-card>
         </div>
@@ -179,7 +181,7 @@ export default {
                 timeout: 3000,
             },
             formatTypeSelected: null,
-            formatTypeSelectection: ['C-Code', 'C-Bytes', 'JS-Bytes', 'JSON-Bytes']
+            formatTypeSelection: ['C-Code', 'C-Bytes', 'JS-Bytes', 'JSON-Bytes']
         };
     },
     computed: {
@@ -286,6 +288,7 @@ export default {
             this.gridHeight = parseInt(height);
         },
         reset() {
+            this.formatTypeSelected = this.formatTypeSelection[0];
             this.resetImageData();
             this.xbmArray = [];
             this.isEditMode = true;
